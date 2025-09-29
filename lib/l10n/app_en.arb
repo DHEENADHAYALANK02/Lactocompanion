@@ -1,0 +1,12 @@
+{
+  "@@locale": "en",
+  "appTitle": "My Shop",
+  "welcome": "Welcome",
+  "cart": "Cart",
+  "checkout": "Checkout",
+  "profile": "Profile",
+  "selectLanguage": "Select Language",
+  "changeLanguage": "Change Language",
+  "confirm": "Confirm",
+  "cancel": "Cancel"
+}

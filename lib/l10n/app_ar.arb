@@ -1,0 +1,12 @@
+{
+  "@@locale": "ar",
+  "appTitle": "متجري",
+  "welcome": "مرحبا",
+  "cart": "عربة",
+  "checkout": "الدفع",
+  "profile": "الملف الشخصي",
+  "selectLanguage": "اختر اللغة",
+  "changeLanguage": "تغيير اللغة",
+  "confirm": "تأكيد",
+  "cancel": "إلغاء"
+}

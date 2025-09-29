@@ -1,0 +1,19 @@
+{
+  "name": "lactocompanion",
+  "version": "1.0.0",
+  "description": "A new Flutter project.",
+  "main": "translate.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "google-translate-api-x": "^10.7.2"
+  }
+}
