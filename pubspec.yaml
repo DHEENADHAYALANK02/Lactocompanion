@@ -20,7 +20,8 @@ dependencies:
   video_player: ^2.9.1
   chewie: ^1.8.1
   share_plus: ^10.0.2
-  youtube_player_flutter: 9.1.2
+  youtube_player_flutter: ^9.1.2
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
@@ -32,9 +33,10 @@ flutter:
   generate: true
   assets:
     - assets/images/mother.png
+    - assets/images/rategle_logo.png
 
-flutter_gen:
-  l10n:
-    arb-dir: lib/l10n
-    template-arb-file: app_en.arb
-    output-localization-file: app_localizations.dart
+l10n:
+  arb-dir: lib/l10n
+  template-arb-file: app_en.arb
+  output-localization-file: app_localizations.dart
+

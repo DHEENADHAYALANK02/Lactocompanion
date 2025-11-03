@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Screens import
 import 'Screens/LoginPage/newpasswordpage.dart';
 import 'Screens/Welcome/welcomepage.dart';
 import 'Screens/Home/homepage.dart';
-import 'Screens/Profile/language.dart';
+import 'Screens/Profile/language.dart'; // ✅ Added import
 
 /// Global navigator key → auth events handle panna
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -25,8 +26,48 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  /// Static function → dynamic language change
+  static void setLocale(BuildContext context, Locale newLocale) async {
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.setLocale(newLocale);
+
+    // ✅ Save locale to SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("app_lang", newLocale.languageCode);
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale = const Locale('en'); // Default English
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedLocale();
+  }
+
+  /// ✅ Load saved language from SharedPreferences
+  Future<void> _loadSavedLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    final langCode = prefs.getString("app_lang");
+    if (langCode != null && langCode.isNotEmpty) {
+      setState(() {
+        _locale = Locale(langCode);
+      });
+    }
+  }
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +78,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.pink),
 
       // ✅ Localization Setup
+      locale: _locale,
       supportedLocales: const [
         Locale('en'), // English
         Locale('ar'), // Arabic
-        Locale('ta'), // Tamil
-        Locale('hi'), // Hindi (since u generated app_hi.arb)
       ],
       localizationsDelegates: const [
-        AppLocalizations.delegate, // Generated delegate
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -59,12 +99,71 @@ class MyApp extends StatelessWidget {
         return const Locale('en');
       },
 
-      home: const SessionRedirector(),
+      // 🔑 Add this builder for RTL support
+      builder: (context, child) {
+        return Directionality(
+          textDirection:
+              _locale.languageCode == "ar" ? TextDirection.rtl : TextDirection.ltr,
+          child: child!,
+        );
+      },
+
+      // ✅ The first screen is AppEntry (decides which screen to show)
+      home: const AppEntry(),
     );
   }
 }
 
-/// Decides whether → Home / Welcome
+/// 🚀 AppEntry → checks if language already chosen before showing WelcomePage
+class AppEntry extends StatefulWidget {
+  const AppEntry({super.key});
+
+  @override
+  State<AppEntry> createState() => _AppEntryState();
+}
+
+class _AppEntryState extends State<AppEntry> {
+  bool _loading = true;
+  bool _languageChosen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLanguage();
+  }
+
+  Future<void> _checkLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lang = prefs.getString("app_lang");
+    debugPrint("🟡 [AppEntry] Found language: $lang");
+    setState(() {
+      _languageChosen = lang != null && lang.isNotEmpty;
+      _loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("🟢 [AppEntry] _languageChosen = $_languageChosen");
+
+    if (_loading) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator(color: Colors.pink)),
+      );
+    }
+
+    if (_languageChosen) {
+      debugPrint("🟢 [AppEntry] → SessionRedirector()");
+      return const SessionRedirector();
+    } else {
+      debugPrint("🟢 [AppEntry] → LanguageSelectionPage()");
+      return const LanguageSelectionPage();
+    }
+  }
+}
+
+/// ✅ Decides whether → Home / Welcome (after language selection)
 class SessionRedirector extends StatefulWidget {
   const SessionRedirector({super.key});
 
@@ -133,4 +232,4 @@ class _SessionRedirectorState extends State<SessionRedirector> {
     }
     return _screen;
   }
-}
+} 

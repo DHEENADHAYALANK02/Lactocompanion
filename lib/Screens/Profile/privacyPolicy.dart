@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../l10n/app_localizations.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor:const Color.fromRGBO(249, 182, 203, 1), // Same pink as previous
+      backgroundColor: const Color.fromRGBO(249, 182, 203, 1), // Same pink as previous
       appBar: AppBar(
-        backgroundColor:const Color.fromRGBO(249, 182, 203, 1),
+        backgroundColor: const Color.fromRGBO(249, 182, 203, 1),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black), // Thick arrow
@@ -18,7 +21,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         title: Row(
           children: [
             Text(
-              'Privacy Policy',
+              loc.privacyPolicyTitle, // 🔑 from arb
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
@@ -26,7 +29,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            
           ],
         ),
       ),
@@ -42,7 +44,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Privacy Policy',
+                loc.privacyPolicyTitle, // 🔑
                 style: GoogleFonts.poppins(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -51,9 +53,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Welcome to [Your App Name]! Your privacy is important to us. '
-                'This Privacy Policy explains how we collect, use, and protect your personal information. '
-                'By using our app, you agree to this Privacy Policy.',
+                loc.privacyIntro, // 🔑
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black87,
@@ -61,37 +61,33 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildSection('1. Information We Collect', [
-                'We may collect the following information:',
-                '• Personal Information: Name, email address, phone number.',
-                '• Account Information: Login details, preferences, profile information.',
-                '• Usage Data: How you use our app, device details, IP address, cookies.',
-                '• Health/Consultation Data (if applicable): Information you provide when booking or consulting specialists.',
+
+              _buildSection(loc.infoCollectTitle, [
+                loc.infoCollect1,
+                loc.infoCollect2,
+                loc.infoCollect3,
+                loc.infoCollect4,
               ]),
-              _buildSection('2. How We Use Your Information', [
-                'We use your data to:',
-                '• Provide and improve our services.',
-                '• Book and manage appointments.',
-                '• Send notifications and updates.',
-                '• Communicate with you (notifications, reminders, support).',
-                '• Ensure security and prevent fraud.',
+              _buildSection(loc.infoUseTitle, [
+                loc.infoUse1,
+                loc.infoUse2,
+                loc.infoUse3,
+                loc.infoUse4,
+                loc.infoUse5,
               ]),
-              _buildSection('3. How We Share Information', [
-                'We do not sell your personal data.',
-                'We may share information with:',
-                '• Trusted service providers (e.g., payment gateways, cloud hosting).',
-                '• Specialists/doctors (only with your consent).',
-                '• Legal authorities (if required by law).',
+              _buildSection(loc.infoShareTitle, [
+                loc.infoShare1,
+                loc.infoShare2,
+                loc.infoShare3,
               ]),
-              _buildSection('4. Data Security', [
-                '• We use encryption and secure servers to protect your information.',
-                '• Only authorized personnel can access your data.',
-                '• However, no system is 100% secure, so we cannot guarantee absolute security.',
+              _buildSection(loc.dataSecurityTitle, [
+                loc.dataSecurity1,
+                loc.dataSecurity2,
+                loc.dataSecurity3,
               ]),
-              _buildSection('5. Your Rights', [
-                'You have the right to:',
-                '• Access and update your personal information.',
-                '• Request deletion of your account and data.',
+              _buildSection(loc.yourRightsTitle, [
+                loc.yourRights1,
+                loc.yourRights2,
               ]),
             ],
           ),

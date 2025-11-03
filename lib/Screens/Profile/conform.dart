@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../l10n/app_localizations.dart';
+import '../../main.dart';
 
 class BookingSuccessPage extends StatefulWidget {
   final String? selectedLanguage;
 
-  const BookingSuccessPage({
-    Key? key,
-    this.selectedLanguage,
-  }) : super(key: key);
+  const BookingSuccessPage({super.key, this.selectedLanguage});
 
   @override
   State<BookingSuccessPage> createState() => _BookingSuccessPageState();
@@ -25,54 +24,31 @@ class _BookingSuccessPageState extends State<BookingSuccessPage>
   @override
   void initState() {
     super.initState();
-    
+
     _scaleController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    
+        duration: const Duration(milliseconds: 1000), vsync: this);
     _slideController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
-    
+        duration: const Duration(milliseconds: 900), vsync: this);
     _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
+        duration: const Duration(milliseconds: 1000), vsync: this);
+
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.elasticOut,
-    ));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 0.3), end: Offset.zero).animate(
+            CurvedAnimation(parent: _slideController, curve: Curves.easeOutQuart));
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.5),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
+    );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeIn,
-    ));
-
-    // Start animations with delays
     _scaleController.forward();
-    Future.delayed(const Duration(milliseconds: 300), () {
-      _slideController.forward();
-    });
-    Future.delayed(const Duration(milliseconds: 600), () {
-      _fadeController.forward();
-    });
+    Future.delayed(
+        const Duration(milliseconds: 200), () => _slideController.forward());
+    Future.delayed(
+        const Duration(milliseconds: 500), () => _fadeController.forward());
   }
 
   @override
@@ -85,6 +61,11 @@ class _BookingSuccessPageState extends State<BookingSuccessPage>
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final size = MediaQuery.of(context).size;
+    final isSmallDevice = size.height < 700;
+    final isTablet = size.width > 600;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -92,397 +73,308 @@ class _BookingSuccessPageState extends State<BookingSuccessPage>
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFFFFF0F5), // Lavender blush
-              Color(0xFFFFE4E6), // Misty rose
-              Color(0xFFFFF5F7), // Very light rose
+              Color(0xFFFFF0F5),
+              Color(0xFFFFE4E6),
+              Color(0xFFFFF5F7),
+              Color(0xFFFFEBEE)
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
+            stops: [0.0, 0.3, 0.7, 1.0],
           ),
         ),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              children: [
-                // ✅ Header with back button and title
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 40),
-                  child: Row(
-                    children: [
-                      IconButton(
+          child: Column(
+            children: [
+              // ✨ Header with Title
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  isTablet ? 24 : 16,
+                  isSmallDevice ? 8 : 12,
+                  isTablet ? 24 : 16,
+                  isSmallDevice ? 12 : 20,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Color.fromARGB(255, 0, 0, 0), // Dark rose
-                          size: 24,
-                        ),
+                        icon: const Icon(Icons.arrow_back,
+                            color: Color.fromARGB(255, 0, 0, 0), size: 24),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          " Language Confirmation",
-                          style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: const Color.fromARGB(255, 0, 0, 0), // Dark rose
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // ✅ Animated Success Icon with Rose Theme
-                ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Outer glow ring
-                      Container(
-                        width: 160,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: RadialGradient(
-                            colors: [
-                              const Color(0xFFE91E63).withOpacity(0.15), // Rose pink
-                              const Color(0xFFE91E63).withOpacity(0.08),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Middle ring
-                      Container(
-                        width: 140,
-                        height: 140,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFFE91E63).withOpacity(0.1),
-                          border: Border.all(
-                            color: const Color(0xFFE91E63).withOpacity(0.25),
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                      // Main success circle
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFFE91E63), // Rose pink
-                              Color(0xFFAD1457), // Dark rose
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFE91E63).withOpacity(0.4),
-                              blurRadius: 20,
-                              offset: const Offset(0, 8),
-                            ),
-                            BoxShadow(
-                              color: const Color(0xFFE91E63).withOpacity(0.3),
-                              blurRadius: 40,
-                              spreadRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.check_rounded,
-                            size: 50,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      // Floating particles with rose colors
-                      ...List.generate(6, (index) {
-                        return Positioned(
-                          top: 20 + (index * 15.0),
-                          left: 50 + (index * 20.0),
-                          child: AnimatedBuilder(
-                            animation: _scaleController,
-                            builder: (context, child) {
-                              return Transform.scale(
-                                scale: _scaleAnimation.value,
-                                child: Container(
-                                  width: 4 + (index % 3),
-                                  height: 4 + (index % 3),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: [
-                                      const Color(0xFFE91E63), // Rose pink
-                                      const Color(0xFFEC407A), // Light rose
-                                      const Color(0xFFF48FB1), // Lighter rose
-                                    ][index % 3].withOpacity(0.7),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 50),
-
-                // ✅ Animated Title with Rose Theme
-                SlideTransition(
-                  position: _slideAnimation,
-                  child: Column(
-                    children: [
-                      Text(
-                        " Success!",
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        loc.languageConfirmation,
                         style: GoogleFonts.poppins(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF880E4F), // Dark rose
+                          fontSize: isTablet ? 22 : (isSmallDevice ? 18 : 20),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
-                      
-                      const SizedBox(height: 16),
-                      
-                      Container(
-                        height: 4,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFFE91E63), // Rose pink
-                              Color(0xFFF48FB1), // Light rose
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
 
-                const SizedBox(height: 30),
-
-                // ✅ Language confirmation card with Rose Theme
-                SlideTransition(
-                  position: _slideAnimation,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(24),
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFE91E63).withOpacity(0.08),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                      border: Border.all(
-                        color: const Color(0xFFE91E63).withOpacity(0.15),
-                        width: 1,
-                      ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isTablet ? 48 : 24,
                     ),
                     child: Column(
                       children: [
-                        Text(
-                          widget.selectedLanguage != null
-                              ? "Language Preference"
-                              : "Booking Confirmed",
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        if (widget.selectedLanguage != null) ...[
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE91E63).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: const Color(0xFFE91E63).withOpacity(0.3),
-                              ),
-                            ),
-                            child: Text(
-                              widget.selectedLanguage!,
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF880E4F), // Dark rose
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                        Text(
-                          widget.selectedLanguage != null
-                              ? "Successfully confirmed!"
-                              : "Your booking has been confirmed!",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                        SizedBox(height: isSmallDevice ? 20 : (isTablet ? 60 : 40)),
 
-                const SizedBox(height: 40),
-
-                // ✅ Information section with Rose Theme
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE91E63).withOpacity(0.06),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFFE91E63).withOpacity(0.12),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE91E63).withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.email_outlined,
-                            color: Color(0xFFAD1457), // Dark rose
-                            size: 20,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        // 🎉 Success Icon with Glow (Responsive)
+                        ScaleTransition(
+                          scale: _scaleAnimation,
+                          child: Stack(
+                            alignment: Alignment.center,
                             children: [
-                              Text(
-                                "Check your email",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
+                              // Outer glow
+                              Container(
+                                width: isSmallDevice ? 110 : (isTablet ? 160 : 140),
+                                height: isSmallDevice ? 110 : (isTablet ? 160 : 140),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: RadialGradient(
+                                    colors: [
+                                      const Color(0xFFE91E63).withOpacity(0.3),
+                                      const Color(0xFFE91E63).withOpacity(0.0),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              Text(
-                                "Confirmation details sent",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: Colors.black54,
+                              // Icon
+                              Container(
+                                width: isSmallDevice ? 90 : (isTablet ? 130 : 110),
+                                height: isSmallDevice ? 90 : (isTablet ? 130 : 110),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: const LinearGradient(
+                                    colors: [Color(0xFFE91E63), Color(0xFFAD1457)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          const Color(0xFFE91E63).withOpacity(0.5),
+                                      blurRadius: 30,
+                                      offset: const Offset(0, 10),
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.check_rounded,
+                                    size: isSmallDevice ? 50 : (isTablet ? 70 : 60),
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
+
+                        SizedBox(height: isSmallDevice ? 24 : (isTablet ? 48 : 36)),
+
+                        // 🎯 Title (Responsive)
+                        SlideTransition(
+                          position: _slideAnimation,
+                          child: Text(
+                            loc.success,
+                            style: GoogleFonts.poppins(
+                              fontSize: isSmallDevice ? 32 : (isTablet ? 48 : 40),
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF880E4F),
+                              letterSpacing: -0.5,
+                              height: 1.2,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: isSmallDevice ? 8 : 12),
+
+                        // 💬 Subtitle (Responsive)
+                        SlideTransition(
+                          position: _slideAnimation,
+                          child: Text(
+                            widget.selectedLanguage != null
+                                ? loc.languagePreference
+                                : loc.bookingConfirmed,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: isSmallDevice ? 14 : (isTablet ? 18 : 16),
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black54,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: isSmallDevice ? 24 : (isTablet ? 40 : 32)),
+
+                        // 🎨 Language Card (Responsive)
+                        if (widget.selectedLanguage != null)
+                          SlideTransition(
+                            position: _slideAnimation,
+                            child: Container(
+                              width: double.infinity,
+                              constraints: BoxConstraints(
+                                maxWidth: isTablet ? 500 : double.infinity,
+                              ),
+                              padding: EdgeInsets.all(isSmallDevice ? 20 : (isTablet ? 32 : 28)),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        const Color(0xFFE91E63).withOpacity(0.12),
+                                    blurRadius: 30,
+                                    offset: const Offset(0, 12),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isSmallDevice ? 16 : 20,
+                                      vertical: isSmallDevice ? 8 : 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          const Color(0xFFE91E63).withOpacity(0.15),
+                                          const Color(0xFFAD1457).withOpacity(0.08),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(
+                                        color: const Color(0xFFE91E63)
+                                            .withOpacity(0.2),
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.language_rounded,
+                                          color: const Color(0xFF880E4F),
+                                          size: isSmallDevice ? 20 : (isTablet ? 24 : 22),
+                                        ),
+                                        SizedBox(width: isSmallDevice ? 8 : 10),
+                                        Flexible(
+                                          child: Text(
+                                            widget.selectedLanguage!,
+                                            style: GoogleFonts.poppins(
+                                              fontSize: isSmallDevice ? 18 : (isTablet ? 22 : 20),
+                                              fontWeight: FontWeight.w700,
+                                              color: const Color(0xFF880E4F),
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: isSmallDevice ? 12 : 16),
+                                  Text(
+                                    loc.successfullyConfirmed,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: isSmallDevice ? 13 : (isTablet ? 16 : 14),
+                                      color: Colors.black54,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                        SizedBox(height: isSmallDevice ? 20 : (isTablet ? 32 : 24)),
+
+                        // 🚀 Continue Button (Responsive - Smooth Hover)
+                        FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: Container(
+                            width: double.infinity,
+                            constraints: BoxConstraints(
+                              maxWidth: isTablet ? 500 : double.infinity,
+                            ),
+                            height: isSmallDevice ? 56 : (isTablet ? 64 : 60),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFE91E63), Color(0xFFAD1457)],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color(0xFFE91E63).withOpacity(0.4),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const SessionRedirector()),
+                                  (route) => false,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.white,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    loc.continueText,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: isSmallDevice ? 16 : (isTablet ? 20 : 18),
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.3,
+                                    ),
+                                  ),
+                                  SizedBox(width: isSmallDevice ? 8 : 12),
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    size: isSmallDevice ? 20 : (isTablet ? 24 : 22),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: isSmallDevice ? 24 : (isTablet ? 40 : 30)),
                       ],
                     ),
                   ),
                 ),
-
-                const Spacer(),
-
-                // ✅ Enhanced CTA Button with Rose Theme
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 40),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE91E63), // Rose pink
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 0,
-                        shadowColor: Colors.transparent,
-                      ).copyWith(
-                        overlayColor: MaterialStateProperty.all(
-                          Colors.white.withOpacity(0.1),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Continue",
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          const Icon(
-                            Icons.arrow_forward_rounded,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                // ✅ Secondary action with Rose Theme
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: TextButton(
-                    onPressed: () {
-                      // Add functionality for viewing booking details
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            "Booking details coming soon!",
-                            style: GoogleFonts.poppins(),
-                          ),
-                          backgroundColor: const Color(0xFF880E4F), // Dark rose
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: Text(
-                      "View booking details",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: const Color(0xFF880E4F), // Dark rose
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

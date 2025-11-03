@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lactocompanion/Screens/SignUp/signuppage.dart';
 import 'package:lactocompanion/Screens/LoginPage/login_page.dart';
+import 'package:lactocompanion/l10n/app_localizations.dart'; // ✅ added
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -75,6 +76,26 @@ class _WelcomePageState extends State<WelcomePage>
     super.dispose();
   }
 
+  // ✅ Localized text getter
+  String _getLocalized(String key, String fallback) {
+    final loc = AppLocalizations.of(context)!;
+    final map = {
+      "appName": loc.appTitle,
+      "title1": loc.oneTapTo,
+      "title2": loc.better,
+      "title3": loc.health,
+      "subtitle": loc.findSpecialist,
+      "trustedCare": loc.trustedCare,
+      "signup": loc.signup,
+      "login": loc.login,
+      "secure": loc.secure,
+      "verified": loc.verified,
+      "caring": loc.caring,
+      "tagline": loc.welcomeTagline,
+    };
+    return map[key] ?? fallback;
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -124,7 +145,7 @@ class _WelcomePageState extends State<WelcomePage>
                                   color: Colors.pink.shade600, size: 16),
                               const SizedBox(width: 6),
                               Text(
-                                "LactoCompanion",
+                                _getLocalized("appName", "LactoCompanion"),
                                 style: GoogleFonts.poppins(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -167,7 +188,7 @@ class _WelcomePageState extends State<WelcomePage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "One Tap To",
+                            _getLocalized("title1", "One Tap To"),
                             style: GoogleFonts.poppins(
                               fontSize: 32,
                               fontWeight: FontWeight.w800,
@@ -179,7 +200,7 @@ class _WelcomePageState extends State<WelcomePage>
                           Row(
                             children: [
                               Text(
-                                "Better ",
+                                _getLocalized("title2", "Better "),
                                 style: GoogleFonts.poppins(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w800,
@@ -201,7 +222,7 @@ class _WelcomePageState extends State<WelcomePage>
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  "Health",
+                                  _getLocalized("title3", "Health"),
                                   style: GoogleFonts.poppins(
                                     fontSize: 32,
                                     fontWeight: FontWeight.w800,
@@ -215,7 +236,8 @@ class _WelcomePageState extends State<WelcomePage>
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            "Find The Best Specialist At The Right Time",
+                            _getLocalized("subtitle",
+                                "Find The Best Specialist At The Right Time"),
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -331,7 +353,8 @@ class _WelcomePageState extends State<WelcomePage>
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        "Trusted Care",
+                                        _getLocalized("trustedCare",
+                                            "Trusted Care"),
                                         style: GoogleFonts.poppins(
                                           fontSize: 10,
                                           fontWeight: FontWeight.w600,
@@ -357,7 +380,7 @@ class _WelcomePageState extends State<WelcomePage>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _buildButton(
-                          "Signup",
+                          _getLocalized("signup", "Signup"),
                           () {
                             HapticFeedback.mediumImpact();
                             Navigator.push(
@@ -368,7 +391,7 @@ class _WelcomePageState extends State<WelcomePage>
                         ),
                         const SizedBox(width: 20),
                         _buildButton(
-                          "Login",
+                          _getLocalized("login", "Login"),
                           () {
                             HapticFeedback.mediumImpact();
                             Navigator.push(
@@ -390,19 +413,20 @@ class _WelcomePageState extends State<WelcomePage>
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _buildTrustIndicator(
-                                Icons.security_rounded, "Secure"),
+                            _buildTrustIndicator(Icons.security_rounded,
+                                _getLocalized("secure", "Secure")),
                             const SizedBox(width: 20),
-                            _buildTrustIndicator(
-                                Icons.verified_user_rounded, "Verified"),
+                            _buildTrustIndicator(Icons.verified_user_rounded,
+                                _getLocalized("verified", "Verified")),
                             const SizedBox(width: 20),
                             _buildTrustIndicator(Icons.favorite_rounded,
-                                "Caring"),
+                                _getLocalized("caring", "Caring")),
                           ],
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          "Your trusted companion for maternal health",
+                          _getLocalized("tagline",
+                              "Your trusted companion for maternal health"),
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             fontSize: 12,

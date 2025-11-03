@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lactocompanion/Screens/SignUp/signuppage.dart';
+import '../../l10n/app_localizations.dart'; // ✅ Localization import
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -88,7 +89,7 @@ class _LoginPageState extends State<LoginPage>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.black.withOpacity(0.2),
                   blurRadius: 15,
                   offset: const Offset(0, 6),
                 ),
@@ -124,54 +125,57 @@ class _LoginPageState extends State<LoginPage>
   }
 
   // Login with Email
-Future<void> loginWithEmail() async {
-  if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-    showPopup("⚠️ Please fill all fields", isError: true);
-    return;
-  }
+  Future<void> loginWithEmail() async {
+    final loc = AppLocalizations.of(context)!;
 
-  setState(() => isLoading = true);
-  try {
-    final res = await supabase.auth.signInWithPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text,
-    );
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      showPopup("⚠️ ${loc.fillAllFields}", isError: true);
+      return;
+    }
 
-    if (!mounted) return;
-
-    if (res.user != null) {
-      await saveCredentials(emailController.text, passwordController.text);
-
-      // ✅ Fetch profile name from profiles table
-      final profile = await supabase
-          .from("profiles")
-          .select("name")
-          .eq("id", res.user!.id)
-          .maybeSingle();
-
-      String userName = profile?["name"] ?? res.user!.email ?? "User";
+    setState(() => isLoading = true);
+    try {
+      final res = await supabase.auth.signInWithPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
 
       if (!mounted) return;
-      showPopup("✅ Welcome back, $userName");
+
+      if (res.user != null) {
+        await saveCredentials(emailController.text, passwordController.text);
+
+        final profile = await supabase
+            .from("profiles")
+            .select("name")
+            .eq("id", res.user!.id)
+            .maybeSingle();
+
+        String userName = profile?["name"] ?? res.user!.email ?? "User";
+
+        if (!mounted) return;
+        showPopup("${loc.welcomeBack} $userName");
+      }
+    } catch (e) {
+      if (!mounted) return;
+      String errorMessage = loc.loginFailed;
+
+      if (e.toString().contains("invalid_credentials")) {
+        errorMessage = loc.invalidCredentials;
+      } else if (e.toString().contains("user_not_found")) {
+        errorMessage = loc.userNotFound;
+      }
+
+      showPopup(errorMessage, isError: true);
     }
-  } catch (e) {
     if (!mounted) return;
-    String errorMessage = "Login failed";
-
-    if (e.toString().contains("invalid_credentials")) {
-      errorMessage = "Invalid email or password ❌";
-    } else if (e.toString().contains("user_not_found")) {
-      errorMessage = "User not found. Please signup first 📝";
-    }
-
-    showPopup(errorMessage, isError: true);
+    setState(() => isLoading = false);
   }
-  if (!mounted) return;
-  setState(() => isLoading = false);
-}
 
   // Google Login
   Future<void> loginWithGoogle() async {
+    final loc = AppLocalizations.of(context)!;
+
     setState(() => isLoading = true);
     try {
       await supabase.auth.signInWithOAuth(
@@ -182,11 +186,11 @@ Future<void> loginWithEmail() async {
       if (!mounted) return;
       final user = supabase.auth.currentUser;
       if (user != null) {
-        showPopup("🚀 Logged in as ${user.email}");
+        showPopup("🚀 ${loc.loggedInAs} ${user.email}");
       }
     } catch (e) {
       if (!mounted) return;
-      showPopup("Google login failed. Please try again.", isError: true);
+      showPopup(loc.googleLoginFailed, isError: true);
     }
     if (!mounted) return;
     setState(() => isLoading = false);
@@ -194,8 +198,10 @@ Future<void> loginWithEmail() async {
 
   // Reset Password
   Future<void> resetPassword() async {
+    final loc = AppLocalizations.of(context)!;
+
     if (emailController.text.isEmpty) {
-      showPopup("Please enter your email first", isError: true);
+      showPopup(loc.enterEmailFirst, isError: true);
       return;
     }
     try {
@@ -204,15 +210,17 @@ Future<void> loginWithEmail() async {
         redirectTo: "io.supabase.flutter://reset-callback",
       );
       if (!mounted) return;
-      showPopup("📧 Password reset link sent! Check your email.");
+      showPopup(loc.passwordResetSent);
     } catch (e) {
       if (!mounted) return;
-      showPopup("Reset failed. Try again later.", isError: true);
+      showPopup(loc.resetFailed, isError: true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFDEFF4),
       body: SafeArea(
@@ -235,7 +243,7 @@ Future<void> loginWithEmail() async {
                   const SizedBox(height: 10),
 
                   Text(
-                    "Log in to Your\nAccount",
+                    loc.loginTitle,
                     style: GoogleFonts.poppins(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -244,13 +252,13 @@ Future<void> loginWithEmail() async {
                   ),
                   const SizedBox(height: 20),
 
-                  _buildInput("Email", emailController, Icons.email_outlined,
+                  _buildInput(loc.email, emailController, Icons.email_outlined,
                       false,
                       type: TextInputType.emailAddress),
                   const SizedBox(height: 16),
 
                   _buildInput(
-                      "Password", passwordController, Icons.lock_outline, true),
+                      loc.password, passwordController, Icons.lock_outline, true),
                   const SizedBox(height: 10),
 
                   Row(
@@ -263,13 +271,13 @@ Future<void> loginWithEmail() async {
                             onChanged: (val) =>
                                 setState(() => rememberMe = val ?? false),
                           ),
-                          Text("Remember Me", style: GoogleFonts.poppins()),
+                          Text(loc.rememberMe, style: GoogleFonts.poppins()),
                         ],
                       ),
                       TextButton(
                         onPressed: resetPassword,
                         child: Text(
-                          "Forgot Password?",
+                          loc.forgotPassword,
                           style: GoogleFonts.poppins(color: Colors.pink),
                         ),
                       ),
@@ -291,7 +299,7 @@ Future<void> loginWithEmail() async {
                       child: isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : Text(
-                              "Login",
+                              loc.login,
                               style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -303,13 +311,13 @@ Future<void> loginWithEmail() async {
                   const SizedBox(height: 20),
 
                   Row(
-                    children: const [
-                      Expanded(child: Divider(thickness: 1)),
+                    children: [
+                      const Expanded(child: Divider(thickness: 1)),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text("Or continue with"),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(loc.orContinueWith),
                       ),
-                      Expanded(child: Divider(thickness: 1)),
+                      const Expanded(child: Divider(thickness: 1)),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -329,7 +337,7 @@ Future<void> loginWithEmail() async {
                         "https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png",
                         height: 24,
                       ),
-                      label: Text("Login With Google",
+                      label: Text(loc.loginWithGoogle,
                           style: GoogleFonts.poppins()),
                     ),
                   ),
@@ -339,7 +347,7 @@ Future<void> loginWithEmail() async {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Don’t have an account? ",
+                        Text(loc.dontHaveAccount,
                             style: GoogleFonts.poppins()),
                         TextButton(
                           onPressed: () {
@@ -351,7 +359,7 @@ Future<void> loginWithEmail() async {
                             );
                           },
                           child: Text(
-                            "Sign Up",
+                            loc.signUp,
                             style: GoogleFonts.poppins(color: Colors.pink),
                           ),
                         ),
@@ -370,6 +378,8 @@ Future<void> loginWithEmail() async {
   Widget _buildInput(String label, TextEditingController controller,
       IconData icon, bool isPassword,
       {TextInputType type = TextInputType.text}) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -382,7 +392,7 @@ Future<void> loginWithEmail() async {
           keyboardType: type,
           obscureText: isPassword && !isPasswordVisible,
           decoration: InputDecoration(
-            hintText: "Enter your $label",
+            hintText: "${loc.enterYour} $label",
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(

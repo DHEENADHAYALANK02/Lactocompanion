@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../Home/Homepage.dart';
+import '../../l10n/app_localizations.dart';
 
 class NewPasswordPage extends StatefulWidget {
   const NewPasswordPage({super.key});
@@ -19,27 +20,28 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
   bool isConfirmVisible = false;
 
   Future<void> updatePassword() async {
+    final loc = AppLocalizations.of(context)!;
     final newPassword = passwordController.text.trim();
     final confirmPassword = confirmController.text.trim();
 
     if (newPassword.isEmpty || confirmPassword.isEmpty) {
-      _showPopup("⚠️ Please fill both fields", isError: true);
+      _showPopup("⚠️ ${loc.fillBothFields}", isError: true);
       return;
     }
 
     if (newPassword.length < 6) {
-      _showPopup("🔒 Password must be at least 6 characters", isError: true);
+      _showPopup("🔒 ${loc.passwordTooShort}", isError: true);
       return;
     }
 
     if (newPassword != confirmPassword) {
-      _showPopup("❌ Passwords do not match", isError: true);
+      _showPopup("❌ ${loc.passwordsDoNotMatch}", isError: true);
       return;
     }
 
     final user = supabase.auth.currentUser;
     if (user == null) {
-      _showPopup("❌ No active session. Please login again.", isError: true);
+      _showPopup("❌ ${loc.noActiveSession}", isError: true);
       return;
     }
 
@@ -50,7 +52,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
 
       if (!mounted) return;
 
-      _showPopup("✅ Password updated successfully", isError: false);
+      _showPopup("✅ ${loc.passwordUpdated}", isError: false);
 
       // Redirect after a short delay
       Future.delayed(const Duration(seconds: 2), () {
@@ -63,7 +65,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
     } catch (e) {
       if (!mounted) return;
       final errorMessage = e is AuthException ? e.message : e.toString();
-      _showPopup("❌ Update failed: $errorMessage", isError: true);
+      _showPopup("❌ ${loc.updateFailed(errorMessage)}", isError: true);
     }
 
     setState(() => isLoading = false);
@@ -108,11 +110,13 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFDEFF4),
       appBar: AppBar(
         backgroundColor: Colors.pink.shade400,
-        title: const Text("Reset Password"),
+        title: Text(loc.resetPasswordTitle),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -123,7 +127,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
               controller: passwordController,
               obscureText: !isPasswordVisible,
               decoration: InputDecoration(
-                labelText: "New Password",
+                labelText: loc.newPassword,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -145,7 +149,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
               controller: confirmController,
               obscureText: !isConfirmVisible,
               decoration: InputDecoration(
-                labelText: "Confirm Password",
+                labelText: loc.confirmPassword,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -175,9 +179,10 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                 onPressed: isLoading ? null : updatePassword,
                 child: isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        "Update Password",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                    : Text(
+                        loc.updatePasswordButton,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
                       ),
               ),
             ),

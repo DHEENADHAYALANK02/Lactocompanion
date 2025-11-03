@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../l10n/app_localizations.dart';
 
 class TermsOfConditionPage extends StatelessWidget {
   const TermsOfConditionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor:const Color.fromRGBO(249, 182, 203, 1), // Same pink as previous
+      backgroundColor: const Color.fromRGBO(249, 182, 203, 1), // Same pink as previous
       appBar: AppBar(
-        backgroundColor:const Color.fromRGBO(249, 182, 203, 1),
+        backgroundColor: const Color.fromRGBO(249, 182, 203, 1),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ), // 🔥 Thick arrow
+          icon: const Icon(Icons.arrow_back, color: Colors.black), // Thick arrow
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Row(
           children: [
             Text(
-              'Terms & Conditions',
+              loc.termsTitle, // 🔑 localized
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
                 color: Colors.black,
               ),
             ),
-            
           ],
         ),
       ),
@@ -45,7 +44,7 @@ class TermsOfConditionPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Terms & Conditions',
+                loc.termsTitle,
                 style: GoogleFonts.poppins(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -54,9 +53,7 @@ class TermsOfConditionPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Welcome to [Your App Name]! Your privacy is important to us. '
-                'This Privacy Policy explains how we collect, use, and protect your personal information. '
-                'By using our app, you agree to this Privacy Policy.',
+                loc.termsIntro, // 🔑 localized intro text
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black87,
@@ -64,37 +61,33 @@ class TermsOfConditionPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildSection('1. Information We Collect', [
-                'We may collect the following information:',
-                '• Personal Information: Name, email address, phone number.',
-                '• Account Information: Login details, preferences, profile information.',
-                '• Usage Data: How you use our app, device details, IP address, cookies.',
-                '• Health/Consultation Data (if applicable): Information you provide when booking or consulting specialists.',
+
+              _buildSection(loc.termsSection1Title, [
+                loc.termsSection1_1,
+                loc.termsSection1_2,
+                loc.termsSection1_3,
+                loc.termsSection1_4,
               ]),
-              _buildSection('2. How We Use Your Information', [
-                'We use your data to:',
-                '• Provide and improve our services.',
-                '• Book and manage appointments.',
-                '• Send notifications and updates.',
-                '• Communicate with you (notifications, reminders, support).',
-                '• Ensure security and prevent fraud.',
+              _buildSection(loc.termsSection2Title, [
+                loc.termsSection2_1,
+                loc.termsSection2_2,
+                loc.termsSection2_3,
+                loc.termsSection2_4,
+                loc.termsSection2_5,
               ]),
-              _buildSection('3. How We Share Information', [
-                'We do not sell your personal data.',
-                'We may share information with:',
-                '• Trusted service providers (e.g., payment gateways, cloud hosting).',
-                '• Specialists/doctors (only with your consent).',
-                '• Legal authorities (if required by law).',
+              _buildSection(loc.termsSection3Title, [
+                loc.termsSection3_1,
+                loc.termsSection3_2,
+                loc.termsSection3_3,
               ]),
-              _buildSection('4. Data Security', [
-                '• We use encryption and secure servers to protect your information.',
-                '• Only authorized personnel can access your data.',
-                '• However, no system is 100% secure, so we cannot guarantee absolute security.',
+              _buildSection(loc.termsSection4Title, [
+                loc.termsSection4_1,
+                loc.termsSection4_2,
+                loc.termsSection4_3,
               ]),
-              _buildSection('5. Your Rights', [
-                'You have the right to:',
-                '• Access and update your personal information.',
-                '• Request deletion of your account and data.',
+              _buildSection(loc.termsSection5Title, [
+                loc.termsSection5_1,
+                loc.termsSection5_2,
               ]),
             ],
           ),

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:lactocompanion/l10n/app_localizations.dart';
 import '../video/videoplayerpage.dart';
+
+// 🔹 Enum for filter (language independent)
+enum VideoFilter { all, pending, completed }
 
 class VideoPage extends StatefulWidget {
   const VideoPage({super.key});
@@ -16,12 +20,18 @@ class _VideoPageState extends State<VideoPage> {
   List<Map<String, dynamic>> videos = [];
   Map<int, Map<String, dynamic>> progressByVideo = {};
   bool isLoading = true;
-  String selectedFilter = "Videos";
+  VideoFilter selectedFilter = VideoFilter.all;
 
   @override
   void initState() {
     super.initState();
     _fetchVideosAndProgress();
+  }
+
+  // ✅ Multilingual text getter
+  String _getLocalized(Map<String, dynamic> data, String key) {
+    final lang = AppLocalizations.of(context)!.localeName;
+    return data["${key}_$lang"] ?? data["${key}_en"] ?? "";
   }
 
   Future<void> _fetchVideosAndProgress() async {
@@ -40,9 +50,8 @@ class _VideoPageState extends State<VideoPage> {
 
         progressByVideo = {};
         for (final row in pRes) {
-          progressByVideo[row['video_id']] = Map<String, dynamic>.from(
-            row as Map,
-          );
+          progressByVideo[row['video_id']] =
+              Map<String, dynamic>.from(row as Map);
         }
       }
     } catch (e) {
@@ -54,12 +63,12 @@ class _VideoPageState extends State<VideoPage> {
 
   // 🔹 Filter videos
   List<Map<String, dynamic>> getFilteredVideos() {
-    if (selectedFilter == "Pending") {
+    if (selectedFilter == VideoFilter.pending) {
       return videos.where((v) {
         final prog = progressByVideo[v['id']];
         return prog == null || prog['is_completed'] != true;
       }).toList();
-    } else if (selectedFilter == "Completed") {
+    } else if (selectedFilter == VideoFilter.completed) {
       return videos.where((v) {
         final prog = progressByVideo[v['id']];
         return prog != null && prog['is_completed'] == true;
@@ -73,7 +82,7 @@ class _VideoPageState extends State<VideoPage> {
       context,
       MaterialPageRoute(
         builder: (_) => VideoPlayerPage(
-          title: video['title'],
+          title: _getLocalized(video, "title"),
           videoUrl: video['video_url'],
           videoId: video['id'],
         ),
@@ -88,6 +97,7 @@ class _VideoPageState extends State<VideoPage> {
   @override
   Widget build(BuildContext context) {
     final filteredVideos = getFilteredVideos();
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFDEFF4),
@@ -96,7 +106,7 @@ class _VideoPageState extends State<VideoPage> {
         elevation: 1,
         centerTitle: false,
         title: Text(
-          "Videos",
+          loc.videos,
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w700,
             fontSize: 20,
@@ -106,29 +116,36 @@ class _VideoPageState extends State<VideoPage> {
       ),
       body: Column(
         children: [
-          // 🔹 Filter Tabs (Scrollable)
+          // 🔹 Filter Tabs (scrollable fixed version)
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
                 children: [
-                  _buildFilterChip("Videos", videos.length),
+                  _buildFilterChip(loc.videos, videos.length, VideoFilter.all),
+                  const SizedBox(width: 8),
                   _buildFilterChip(
-                    "Pending",
+                    loc.pending,
                     videos.where((v) {
                       final prog = progressByVideo[v['id']];
                       return prog == null || prog['is_completed'] != true;
                     }).length,
+                    VideoFilter.pending,
                   ),
+                  const SizedBox(width: 8),
                   _buildFilterChip(
-                    "Completed",
+                    loc.completed,
                     videos.where((v) {
                       final prog = progressByVideo[v['id']];
                       return prog != null && prog['is_completed'] == true;
                     }).length,
+                    VideoFilter.completed,
                   ),
+                  const SizedBox(width: 12),
                 ],
               ),
             ),
@@ -141,7 +158,7 @@ class _VideoPageState extends State<VideoPage> {
                 : filteredVideos.isEmpty
                     ? Center(
                         child: Text(
-                          "No videos found",
+                          loc.noVideosFound,
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             color: Colors.grey,
@@ -154,7 +171,7 @@ class _VideoPageState extends State<VideoPage> {
                         itemBuilder: (context, index) {
                           final video = filteredVideos[index];
                           final progress = progressByVideo[video['id']];
-                          final badge = _buildStatusBadge(video, progress);
+                          final badge = _buildStatusBadge(video, progress, loc);
 
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 22),
@@ -206,7 +223,7 @@ class _VideoPageState extends State<VideoPage> {
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: Text(
-                                        video['title'] ?? "Untitled",
+                                        _getLocalized(video, "title"),
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 15,
@@ -220,8 +237,7 @@ class _VideoPageState extends State<VideoPage> {
                                 const SizedBox(height: 6),
 
                                 ExpandableText(
-                                  text: video['description'] ??
-                                      "No description available",
+                                  text: _getLocalized(video, "description"),
                                   maxLines: 2,
                                 ),
                               ],
@@ -239,15 +255,16 @@ class _VideoPageState extends State<VideoPage> {
   Widget _buildStatusBadge(
     Map<String, dynamic> video,
     Map<String, dynamic>? prog,
+    AppLocalizations loc,
   ) {
     if (prog == null) {
-      return _chip("Pending", Colors.orange);
+      return _chip(loc.pending, Colors.orange);
     }
     if (prog['is_completed'] == true) {
-      return _chip("Completed", Colors.green);
+      return _chip(loc.completed, Colors.green);
     }
     final watched = (prog['watched_seconds'] ?? 0) as int;
-    return _chip("Watched ${watched ~/ 60}m", Colors.blue);
+    return _chip("${loc.watched} ${watched ~/ 60}m", Colors.blue);
   }
 
   Widget _chip(String label, Color color) {
@@ -270,10 +287,10 @@ class _VideoPageState extends State<VideoPage> {
   }
 
   // 🔹 Filter Chip Widget
-  Widget _buildFilterChip(String label, int count) {
-    final isSelected = selectedFilter == label;
+  Widget _buildFilterChip(String label, int count, VideoFilter filter) {
+    final isSelected = selectedFilter == filter;
     return GestureDetector(
-      onTap: () => setState(() => selectedFilter = label),
+      onTap: () => setState(() => selectedFilter = filter),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -308,7 +325,7 @@ class _VideoPageState extends State<VideoPage> {
   }
 }
 
-// 🔹 ExpandableText Widget (same as HomePage)
+// 🔹 ExpandableText Widget
 class ExpandableText extends StatefulWidget {
   final String text;
   final int maxLines;
@@ -324,6 +341,8 @@ class _ExpandableTextState extends State<ExpandableText> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     final span = TextSpan(
       text: widget.text,
       style: GoogleFonts.poppins(color: Colors.black54, fontSize: 12),
@@ -361,7 +380,7 @@ class _ExpandableTextState extends State<ExpandableText> {
             child: Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
-                expanded ? "Read less" : "Read more",
+                expanded ? loc.readLess : loc.readMore,
                 style: GoogleFonts.poppins(
                   color: Colors.pink[400],
                   fontSize: 12,

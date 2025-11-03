@@ -1,12 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../main.dart';
 import 'language.dart';
 import 'terms&conditions.dart';
 import 'privacyPolicy.dart';
+import '../../l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,12 +16,12 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateMixin {
   final supabase = Supabase.instance.client;
 
   String userName = '';
   String userEmail = '';
-  String selectedLanguage = 'English';
+  String selectedLanguage = 'Language';
   bool isEditing = false;
   bool isSaving = false;
 
@@ -38,11 +39,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     _loadUserData();
     _loadVideoStats();
+    _showFeedbackPopup();
 
     _authSub = supabase.auth.onAuthStateChange.listen((data) {
       final event = data.event;
-      if (event == AuthChangeEvent.signedIn ||
-          event == AuthChangeEvent.userUpdated) {
+      if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.userUpdated) {
         _loadUserData();
         _loadVideoStats();
       }
@@ -70,6 +71,313 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  // 🟣 FEEDBACK POPUP
+  void _showFeedbackPopup() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
+      final loc = AppLocalizations.of(context)!;
+
+      int selectedRating = 0;
+      final TextEditingController feedbackController = TextEditingController();
+      bool isSubmitting = false;
+
+      final List<Map<String, dynamic>> emojiRatings = [
+        {'emoji': '😕', 'label': loc.feedbackBad, 'color': const Color(0xFFFF9800)},
+        {'emoji': '😐', 'label': loc.feedbackOkay, 'color': const Color(0xFFFFC107)},
+        {'emoji': '😊', 'label': loc.feedbackGood, 'color': const Color(0xFF66BB6A)},
+        {'emoji': '😍', 'label': loc.feedbackExcellent, 'color': const Color(0xFF4CAF50)},
+      ];
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) {
+          final screenWidth = MediaQuery.of(context).size.width;
+          final screenHeight = MediaQuery.of(context).size.height;
+          final isSmallScreen = screenWidth < 600;
+
+          return StatefulBuilder(
+            builder: (context, setDialogState) {
+              return Dialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: isSmallScreen ? screenWidth * 0.9 : 500,
+                    maxHeight: screenHeight * 0.85,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFF0F5), Color(0xFFFFE4E6)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(dialogContext),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.5),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.close, color: Color(0xFF880E4F), size: 20),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            width: 70,
+                            height: 70,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(colors: [Color(0xFFE91E63), Color(0xFFAD1457)]),
+                            ),
+                            child: const Icon(Icons.feedback, color: Colors.white, size: 36),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(loc.feedbackTitle,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF880E4F),
+                              )),
+                          const SizedBox(height: 8),
+                          Text(loc.feedbackSubtitle,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey)),
+                          const SizedBox(height: 20),
+
+                          // Rating Emojis
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFFE91E63).withOpacity(0.08),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Text(loc.feedbackQuestion,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xFF880E4F))),
+                                const SizedBox(height: 16),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  children: List.generate(emojiRatings.length, (index) {
+                                    final rating = emojiRatings[index];
+                                    final isSelected = selectedRating == index + 1;
+                                    return GestureDetector(
+                                      onTap: () => setDialogState(() => selectedRating = index + 1),
+                                      child: AnimatedContainer(
+                                        duration: const Duration(milliseconds: 200),
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? (rating['color'] as Color).withOpacity(0.15)
+                                              : Colors.grey[100],
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: isSelected
+                                                ? rating['color'] as Color
+                                                : Colors.transparent,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          rating['emoji'] as String,
+                                          style: TextStyle(fontSize: isSelected ? 32 : 26),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                                if (selectedRating > 0) ...[
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    emojiRatings[selectedRating - 1]['label'] as String,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: emojiRatings[selectedRating - 1]['color'] as Color,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Feedback Text Input
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(loc.feedbackShareThoughts,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF880E4F),
+                                    )),
+                                const SizedBox(height: 8),
+                                TextField(
+                                  controller: feedbackController,
+                                  maxLines: 3,
+                                  maxLength: 300,
+                                  decoration: InputDecoration(
+                                    hintText: loc.feedbackHint,
+                                    hintStyle: GoogleFonts.poppins(fontSize: 13, color: Colors.grey),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Color(0xFFE91E63), width: 2),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Submit Button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: isSubmitting
+                                  ? null
+                                  : () async {
+                                      if (selectedRating == 0) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(loc.feedbackPleaseSelect,
+                                                style: GoogleFonts.poppins()),
+                                            backgroundColor: Colors.orange,
+                                          ),
+                                        );
+                                        return;
+                                      }
+
+                                      setDialogState(() => isSubmitting = true);
+
+                                      try {
+                                        final user = supabase.auth.currentUser;
+                                        if (user != null) {
+                                          String fetchedUserName = user.userMetadata?['name'] ??
+                                              user.userMetadata?['full_name'] ??
+                                              user.email?.split('@')[0] ??
+                                              'Anonymous User';
+
+                                          await supabase.from('profile_feedback').insert({
+                                            'user_id': user.id,
+                                            'user_name': fetchedUserName,
+                                            'rating': selectedRating,
+                                            'feedback_text': feedbackController.text.trim().isEmpty
+                                                ? null
+                                                : feedbackController.text.trim(),
+                                            'created_at': DateTime.now().toIso8601String(),
+                                          });
+
+                                          if (mounted) {
+                                            Navigator.pop(dialogContext);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text(loc.feedbackThankYou,
+                                                    style: GoogleFonts.poppins()),
+                                                backgroundColor: const Color(0xFF4CAF50),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      } catch (e) {
+                                        debugPrint('❌ Feedback error: $e');
+                                        if (mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(loc.feedbackError,
+                                                  style: GoogleFonts.poppins()),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                      } finally {
+                                        if (mounted) setDialogState(() => isSubmitting = false);
+                                      }
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFE91E63),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child: isSubmitting
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white, strokeWidth: 2)
+                                  : Text(loc.feedbackSubmit,
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    });
+  }
+
+  // 🔥 LOCALIZED "GIVE FEEDBACK" FIX HERE
+  Widget _buildMenuItems(AppLocalizations loc) {
+    return Column(
+      children: [
+        _buildMenuItem(loc.giveFeedback, Icons.feedback, onTap: _showFeedbackPopup),
+        const SizedBox(height: 16),
+        _buildMenuItem(loc.termsTitle, Icons.description, onTap: _navigateToTermsOfCondition),
+        const SizedBox(height: 16),
+        _buildMenuItem(loc.privacyTitle, Icons.privacy_tip, onTap: _navigateToPrivacyPolicy),
+        const SizedBox(height: 16),
+        _buildMenuItem(loc.logout, Icons.logout, isLogout: true, onTap: _handleLogout),
+      ],
+    );
+  }
+
+
+
+  
   Future<void> _loadUserData() async {
     final user = supabase.auth.currentUser;
     if (user != null) {
@@ -153,7 +461,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (user == null) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("❌ No user signed in", style: GoogleFonts.poppins())),
+          SnackBar(
+              content: Text("❌ No user signed in",
+                  style: GoogleFonts.poppins())),
         );
         setState(() => isSaving = false);
         return;
@@ -182,13 +492,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("✅ Profile updated successfully", style: GoogleFonts.poppins())),
+        SnackBar(
+            content: Text("✅ Profile updated successfully",
+                style: GoogleFonts.poppins())),
       );
     } catch (e) {
       if (!mounted) return;
       debugPrint("❌ Profile save error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ Failed to update: $e", style: GoogleFonts.poppins())),
+        SnackBar(
+            content:
+                Text("❌ Failed to update: $e", style: GoogleFonts.poppins())),
       );
     } finally {
       if (mounted) setState(() => isSaving = false);
@@ -212,10 +526,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
-    if (result != null && result is Map<String, String>) {
+    if (result != null && result is Locale) {
       setState(() {
-        selectedLanguage = result['language'] ?? selectedLanguage;
+        selectedLanguage = result.languageCode == 'ar' ? "عربي" : "English";
       });
+
+      MyApp.setLocale(context, result);
     }
   }
 
@@ -234,19 +550,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _handleLogout() async {
+    final loc = AppLocalizations.of(context)!;
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Confirm Logout", style: GoogleFonts.poppins()),
-        content: Text("Are you sure you want to logout?", style: GoogleFonts.poppins()),
+        title: Text(loc.confirmLogout, style: GoogleFonts.poppins()),
+        content: Text(loc.logoutMessage, style: GoogleFonts.poppins()),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text("Cancel", style: GoogleFonts.poppins())),
+              child: Text(loc.cancel, style: GoogleFonts.poppins())),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text("Logout", style: GoogleFonts.poppins()),
+            child: Text(loc.logout, style: GoogleFonts.poppins()),
           ),
         ],
       ),
@@ -266,11 +584,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(249, 182, 203, 1),
       body: Column(
         children: [
-          _buildAppBar(),
+          _buildAppBar(loc),
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
@@ -287,13 +607,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     _buildLanguageButton(),
                     const SizedBox(height: 24),
-                    _buildProfileSection(),
+                    _buildProfileSection(loc),
                     const SizedBox(height: 32),
-                    _buildStatsSection(),
+                    _buildStatsSection(loc),
                     const SizedBox(height: 32),
-                    _buildMenuItems(),
+                    _buildMenuItems(loc),
                     const SizedBox(height: 32),
-                    _buildAboutUsSection(),
+                    _buildAboutUsSection(loc),
                   ],
                 ),
               ),
@@ -304,7 +624,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(AppLocalizations loc) {
     return Container(
       padding: const EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 24),
       child: Row(
@@ -315,7 +635,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(width: 12),
           Text(
-            "Profile",
+            loc.profile,
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.w700,
               fontSize: 20,
@@ -367,7 +687,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileSection() {
+  Widget _buildProfileSection(AppLocalizations loc) {
     return Row(
       children: [
         CircleAvatar(
@@ -392,12 +712,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Enter name",
+                              hintText: loc.enterName,
                               hintStyle: GoogleFonts.poppins(),
                             ),
                           )
                         : Text(
-                            userName.isNotEmpty ? userName : 'No name',
+                            userName.isNotEmpty ? userName : loc.noName,
                             style: GoogleFonts.poppins(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
@@ -420,12 +740,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             style: GoogleFonts.poppins(),
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Enter email",
+                              hintText: loc.enterEmail,
                               hintStyle: GoogleFonts.poppins(),
                             ),
                           )
                         : Text(
-                            userEmail.isNotEmpty ? userEmail : 'No email',
+                            userEmail.isNotEmpty ? userEmail : loc.noEmail,
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               color: Colors.black54,
@@ -441,14 +761,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildStatsSection() {
+  Widget _buildStatsSection(AppLocalizations loc) {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
               child: Text(
-                'Total Videos',
+                loc.totalVideos,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                     fontSize: 12, fontWeight: FontWeight.w600),
@@ -456,7 +776,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             Expanded(
               child: Text(
-                'Pending Videos',
+                loc.pendingVideos,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                     fontSize: 12, fontWeight: FontWeight.w600),
@@ -464,7 +784,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             Expanded(
               child: Text(
-                'Completed Videos',
+                loc.completedVideos,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                     fontSize: 12, fontWeight: FontWeight.w600),
@@ -514,22 +834,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
-  Widget _buildMenuItems() {
-    return Column(
-      children: [
-        _buildMenuItem("Terms Of Condition", Icons.description,
-            onTap: _navigateToTermsOfCondition),
-        const SizedBox(height: 16),
-        _buildMenuItem("Privacy Policy", Icons.privacy_tip,
-            onTap: _navigateToPrivacyPolicy),
-        const SizedBox(height: 16),
-        _buildMenuItem("Log Out", Icons.logout,
-            isLogout: true, onTap: _handleLogout),
-      ],
-    );
-  }
-
   Widget _buildMenuItem(String title, IconData icon,
       {bool isLogout = false, VoidCallback? onTap}) {
     return InkWell(
@@ -565,7 +869,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildAboutUsSection() {
+  Widget _buildAboutUsSection(AppLocalizations loc) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -573,9 +877,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        "At Otake, we believe healthcare should be simple, accessible, "
-        "and reliable. Our platform connects patients with the best specialists "
-        "at the right time.",
+        loc.aboutUsText,
         style: GoogleFonts.poppins(fontSize: 13, height: 1.5),
       ),
     );

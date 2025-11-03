@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lactocompanion/Screens/LoginPage/login_page.dart';
 import 'package:lactocompanion/Screens/Home/Homepage.dart';
+import '../../l10n/app_localizations.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -93,7 +94,7 @@ class _SignupPageState extends State<SignupPage>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.black.withOpacity(0.2),
                   blurRadius: 15,
                   offset: const Offset(0, 6),
                 ),
@@ -130,11 +131,20 @@ class _SignupPageState extends State<SignupPage>
   }
 
   // Signup with Email
+  // Signup with Email
 Future<void> signUpWithEmail() async {
+  final loc = AppLocalizations.of(context)!;
+
   if (nameController.text.isEmpty ||
       emailController.text.isEmpty ||
       passwordController.text.isEmpty) {
-    showPopup("⚠️ Please fill all fields", isError: true);
+    showPopup("⚠️ ${loc.fillAllFields}", isError: true);
+    return;
+  }
+
+  // ✅ Password minimum 6 chars validation
+  if (passwordController.text.length < 6) {
+    showPopup("⚠️ Password must be at least 6 characters long", isError: true);
     return;
   }
 
@@ -166,18 +176,18 @@ Future<void> signUpWithEmail() async {
         (route) => false,
       );
     } else {
-      showPopup("❌ Signup failed. Please try again.", isError: true);
+      showPopup("❌ ${loc.signupFailed}", isError: true);
     }
   } catch (e) {
     if (!mounted) return;
-    String errorMessage = "Something went wrong";
+    String errorMessage = loc.somethingWentWrong;
 
     if (e.toString().contains("user_already_exists")) {
-      errorMessage = "Account already exists. Please login instead 🔑";
+      errorMessage = loc.accountExists;
     } else if (e.toString().contains("invalid_email")) {
-      errorMessage = "Invalid email. Please try again 📧";
+      errorMessage = loc.invalidEmail;
     } else if (e.toString().contains("weak_password")) {
-      errorMessage = "Password too weak. Use a stronger one 🔒";
+      errorMessage = loc.weakPassword;
     }
 
     showPopup(errorMessage, isError: true);
@@ -187,27 +197,27 @@ Future<void> signUpWithEmail() async {
   setState(() => isLoading = false);
 }
 
- // Google Signup
-Future<void> signUpWithGoogle() async {
-  setState(() => isLoading = true);
-  try {
-    await supabase.auth.signInWithOAuth(
-      OAuthProvider.google,
-      redirectTo: "io.supabase.flutter://login-callback", // ✅ match manifest + supabase redirect URLs
-    );
-
-    // ⚡ User null irukkum here, wait for listener
-  } catch (e) {
+  // Google Signup
+  Future<void> signUpWithGoogle() async {
+    final loc = AppLocalizations.of(context)!;
+    setState(() => isLoading = true);
+    try {
+      await supabase.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: "io.supabase.flutter://login-callback",
+      );
+    } catch (e) {
+      if (!mounted) return;
+      showPopup(loc.googleSignupFailed, isError: true);
+    }
     if (!mounted) return;
-    showPopup("Google signup failed. Please try again.", isError: true);
+    setState(() => isLoading = false);
   }
-  if (!mounted) return;
-  setState(() => isLoading = false);
-}
-
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFDEFF4),
       body: SafeArea(
@@ -231,7 +241,7 @@ Future<void> signUpWithGoogle() async {
                   const SizedBox(height: 10),
 
                   Text(
-                    "Create Your\nAccount",
+                    loc.createAccountTitle,
                     style: GoogleFonts.poppins(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -240,14 +250,14 @@ Future<void> signUpWithGoogle() async {
                   ),
                   const SizedBox(height: 20),
 
-                  _buildInput("Name", nameController, Icons.person_outline, false),
+                  _buildInput(loc.name, nameController, Icons.person_outline, false),
                   const SizedBox(height: 16),
 
-                  _buildInput("Email", emailController, Icons.email_outlined, false,
+                  _buildInput(loc.email, emailController, Icons.email_outlined, false,
                       type: TextInputType.emailAddress),
                   const SizedBox(height: 16),
 
-                  _buildInput("Password", passwordController, Icons.lock_outline, true),
+                  _buildInput(loc.password, passwordController, Icons.lock_outline, true),
                   const SizedBox(height: 10),
 
                   Row(
@@ -257,7 +267,7 @@ Future<void> signUpWithGoogle() async {
                         onChanged: (val) =>
                             setState(() => rememberMe = val ?? false),
                       ),
-                      Text("Remember Me", style: GoogleFonts.poppins()),
+                      Text(loc.rememberMe, style: GoogleFonts.poppins()),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -276,7 +286,7 @@ Future<void> signUpWithGoogle() async {
                       child: isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : Text(
-                              "Signup",
+                              loc.signUp,
                               style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -288,13 +298,13 @@ Future<void> signUpWithGoogle() async {
                   const SizedBox(height: 20),
 
                   Row(
-                    children: const [
-                      Expanded(child: Divider(thickness: 1)),
+                    children: [
+                      const Expanded(child: Divider(thickness: 1)),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text("Or sign up with"),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(loc.orSignUpWith),
                       ),
-                      Expanded(child: Divider(thickness: 1)),
+                      const Expanded(child: Divider(thickness: 1)),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -314,7 +324,7 @@ Future<void> signUpWithGoogle() async {
                         "https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png",
                         height: 24,
                       ),
-                      label: Text("Sign Up With Google",
+                      label: Text(loc.signUpWithGoogle,
                           style: GoogleFonts.poppins()),
                     ),
                   ),
@@ -324,7 +334,7 @@ Future<void> signUpWithGoogle() async {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Already have an account? ",
+                        Text(loc.alreadyHaveAccount,
                             style: GoogleFonts.poppins()),
                         TextButton(
                           onPressed: () {
@@ -336,7 +346,7 @@ Future<void> signUpWithGoogle() async {
                             );
                           },
                           child: Text(
-                            "Login",
+                            loc.login,
                             style: GoogleFonts.poppins(color: Colors.pink),
                           ),
                         ),
@@ -355,6 +365,7 @@ Future<void> signUpWithGoogle() async {
   Widget _buildInput(String label, TextEditingController controller,
       IconData icon, bool isPassword,
       {TextInputType type = TextInputType.text}) {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -366,7 +377,7 @@ Future<void> signUpWithGoogle() async {
           keyboardType: type,
           obscureText: isPassword && !isPasswordVisible,
           decoration: InputDecoration(
-            hintText: "Enter your $label",
+            hintText: "${loc.enterYour} $label",
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(

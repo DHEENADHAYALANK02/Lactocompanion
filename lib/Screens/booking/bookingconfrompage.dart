@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../l10n/app_localizations.dart';
 import 'confirm.dart';
 
 final supabase = Supabase.instance.client;
@@ -36,7 +37,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
 
   Future<void> _submitBooking() async {
     if (!_formKey.currentState!.validate()) {
-      _showSnackBar('⚠️ Please fill all fields correctly');
+      _showSnackBar('⚠️ ${AppLocalizations.of(context)!.fillFields}');
       return;
     }
 
@@ -52,7 +53,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
         "patient_name": _nameController.text,
         "patient_mobile": _mobileController.text,
         "patient_age": _ageController.text,
-        "patient_email": _emailController.text, // ✅ email save
+        "patient_email": _emailController.text,
         "user_id": supabase.auth.currentUser?.id,
       });
 
@@ -68,7 +69,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
       );
     } catch (e) {
       debugPrint("❌ Error inserting booking: $e");
-      _showSnackBar('❌ Failed to confirm booking');
+      _showSnackBar('❌ ${AppLocalizations.of(context)!.bookingFailed}');
     } finally {
       setState(() => _isLoading = false);
     }
@@ -89,39 +90,45 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
   void _cancelBooking() => Navigator.pop(context);
 
   String _formatDate(DateTime date) {
-    final days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    final loc = AppLocalizations.of(context)!;
+    final days = [
+      loc.monday,
+      loc.tuesday,
+      loc.wednesday,
+      loc.thursday,
+      loc.friday,
+    ];
     final months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+      loc.jan,
+      loc.feb,
+      loc.mar,
+      loc.apr,
+      loc.may,
+      loc.jun,
+      loc.jul,
+      loc.aug,
+      loc.sep,
+      loc.oct,
+      loc.nov,
+      loc.dec,
     ];
     return '${days[widget.selectedDayIndex]}, ${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8BBD9),
+      backgroundColor:  Colors.white,
       body: Column(
         children: [
-          _buildHeader(),
+          _buildHeader(loc),
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 250, 231, 233),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
-                ),
+                color:const Color(0xFFFDEFF4),
+      
               ),
               child: Padding(
                 padding: const EdgeInsets.all(24),
@@ -129,11 +136,11 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                      _buildAppointmentCard(),
+                      _buildAppointmentCard(loc),
                       const SizedBox(height: 24),
-                      _buildPatientInfoCard(),
+                      _buildPatientInfoCard(loc),
                       const SizedBox(height: 32),
-                      _buildActionButtons(),
+                      _buildActionButtons(loc),
                     ],
                   ),
                 ),
@@ -145,7 +152,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppLocalizations loc) {
     return Container(
       padding: const EdgeInsets.only(top: 60, left: 0, right: 16, bottom: 24),
       child: Row(
@@ -157,7 +164,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
           const SizedBox(width: 16),
           Expanded(
             child: Text(
-              'Confirm Booking',
+              loc.confirmBooking,
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
@@ -170,7 +177,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     );
   }
 
-  Widget _buildAppointmentCard() {
+  Widget _buildAppointmentCard(AppLocalizations loc) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.all(24),
@@ -204,7 +211,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
               ),
               const SizedBox(width: 12),
               Text(
-                "Appointment Summary",
+                loc.appointmentSummary,
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -214,22 +221,10 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
             ],
           ),
           const SizedBox(height: 20),
-          _buildDetailRow(Icons.person_rounded, "Doctor", widget.doctorName),
-          _buildDetailRow(
-            Icons.local_hospital_rounded,
-            "Hospital",
-            widget.hospital,
-          ),
-          _buildDetailRow(
-            Icons.date_range_rounded,
-            "Date",
-            _formatDate(widget.selectedDate),
-          ),
-          _buildDetailRow(
-            Icons.access_time_rounded,
-            "Time",
-            widget.selectedTime,
-          ),
+          _buildDetailRow(Icons.person_rounded, loc.doctor, widget.doctorName),
+          _buildDetailRow(Icons.local_hospital_rounded, loc.hospital, widget.hospital),
+          _buildDetailRow(Icons.date_range_rounded, loc.date, _formatDate(widget.selectedDate)),
+          _buildDetailRow(Icons.access_time_rounded, loc.time, widget.selectedTime),
         ],
       ),
     );
@@ -266,7 +261,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     );
   }
 
-  Widget _buildPatientInfoCard() {
+  Widget _buildPatientInfoCard(AppLocalizations loc) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.all(24),
@@ -302,7 +297,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  "Patient Information",
+                  loc.patientInfo,
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -312,40 +307,17 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
               ],
             ),
             const SizedBox(height: 20),
-            _buildInputField(
-              "Full Name",
-              Icons.person_outline_rounded,
-              _nameController,
-              TextInputType.name,
-              validator: _validateName,
-            ),
+            _buildInputField(loc.fullName, Icons.person_outline_rounded, _nameController,
+                TextInputType.name, validator: _validateName),
             const SizedBox(height: 16),
-            _buildInputField(
-              "Mobile Number",
-              Icons.phone_rounded,
-              _mobileController,
-              TextInputType.phone,
-              maxLength: 10,
-              validator: _validateMobile,
-            ),
+            _buildInputField(loc.mobileNumber, Icons.phone_rounded, _mobileController,
+                TextInputType.phone, maxLength: 10, validator: _validateMobile),
             const SizedBox(height: 16),
-            _buildInputField(
-              "Age",
-              Icons.cake_rounded,
-              _ageController,
-              TextInputType.number,
-              maxLength: 3,
-              suffix: "yrs",
-              validator: _validateAge,
-            ),
+            _buildInputField(loc.age, Icons.cake_rounded, _ageController, TextInputType.number,
+                maxLength: 3, suffix: loc.yrs, validator: _validateAge),
             const SizedBox(height: 16),
-            _buildInputField(
-              "Email",
-              Icons.email_rounded,
-              _emailController,
-              TextInputType.emailAddress,
-              validator: _validateEmail,
-            ), // ✅ Email input
+            _buildInputField(loc.email, Icons.email_rounded, _emailController,
+                TextInputType.emailAddress, validator: _validateEmail),
           ],
         ),
       ),
@@ -388,15 +360,12 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Color(0xFFE91E63), width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(AppLocalizations loc) {
     return Row(
       children: [
         Expanded(
@@ -405,9 +374,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               elevation: 2,
               shadowColor: Colors.red.withOpacity(0.3),
             ),
@@ -417,7 +384,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                 const Icon(Icons.cancel_rounded, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  "Cancel",
+                  loc.cancel,
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -435,9 +402,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               elevation: 2,
               shadowColor: Colors.green.withOpacity(0.3),
             ),
@@ -453,14 +418,10 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.check_circle_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+                      const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        "Confirm",
+                        loc.confirm,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -477,33 +438,37 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
 
   // Validation
   String? _validateName(String? value) {
-    if (value == null || value.isEmpty) return 'Please enter your name';
-    if (value.length < 2) return 'Name must be at least 2 characters';
+    final loc = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) return loc.enterName;
+    if (value.length < 2) return loc.nameTooShort;
     return null;
   }
 
   String? _validateMobile(String? value) {
-    if (value == null || value.isEmpty) return 'Please enter mobile number';
-    if (value.length != 10) return 'Mobile number must be 10 digits';
+    final loc = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) return loc.enterMobile;
+    if (value.length != 10) return loc.mobileLength;
     if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      return 'Please enter valid mobile number';
+      return loc.validMobile;
     }
     return null;
   }
 
   String? _validateAge(String? value) {
-    if (value == null || value.isEmpty) return 'Please enter your age';
+    final loc = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) return loc.enterAge;
     final age = int.tryParse(value);
     if (age == null || age < 1 || age > 120) {
-      return 'Please enter valid age (1-120)';
+      return loc.validAge;
     }
     return null;
   }
 
   String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) return 'Please enter your email';
+    final loc = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) return loc.enterEmail;
     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-      return 'Please enter valid email address';
+      return loc.validEmail;
     }
     return null;
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:lactocompanion/l10n/app_localizations.dart'; // ✅ Localization import
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -14,7 +15,7 @@ class _ChatPageState extends State<ChatPage> {
   final supabase = Supabase.instance.client;
 
   late final String userId;
-  final String adminId = "admin"; // fixed admin id
+  final String adminId = "admin"; // Fixed admin id
 
   List<Map<String, dynamic>> messages = [];
   RealtimeChannel? _channel;
@@ -53,57 +54,58 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  // ✅ Realtime subscription (Flutter SDK correct syntax)
+  // ✅ Realtime subscription
   void _subscribeRealtime() {
-  _channel = supabase
-      .channel("messages_channel_$userId")
-      .onPostgresChanges(
-        event: PostgresChangeEvent.insert,
-        schema: "public",
-        table: "messages",
-        callback: (payload) {
-          final newMsg = Map<String, dynamic>.from(payload.newRecord);
+    _channel = supabase
+        .channel("messages_channel_$userId")
+        .onPostgresChanges(
+          event: PostgresChangeEvent.insert,
+          schema: "public",
+          table: "messages",
+          callback: (payload) {
+            final newMsg = Map<String, dynamic>.from(payload.newRecord);
 
-          // prevent duplicate messages
-          if (!messages.any((m) => m["id"] == newMsg["id"])) {
-            if (newMsg['user_id'] == userId || newMsg['receiver_id'] == userId) {
-              if (mounted) {
-                setState(() {
-                  messages.add(newMsg);
-                });
+            if (!messages.any((m) => m["id"] == newMsg["id"])) {
+              if (newMsg['user_id'] == userId ||
+                  newMsg['receiver_id'] == userId) {
+                if (mounted) {
+                  setState(() {
+                    messages.add(newMsg);
+                  });
+                }
               }
             }
-          }
-        },
-      )
-      .subscribe();
-}
-
- Future<void> _sendMessage() async {
-  if (_controller.text.trim().isEmpty) return;
-
-  final text = _controller.text.trim();
-  _controller.clear();
-
-  try {
-    await supabase.from("messages").insert({
-      "user_id": userId,
-      "sender": "user",
-      "receiver_id": adminId,
-      "text": text,
-    });
-    // ❌ don't add to messages here, realtime will handle it
-  } catch (e) {
-    debugPrint("❌ Supabase insert failed: $e");
+          },
+        )
+        .subscribe();
   }
-}
 
+  // ✅ Send message
+  Future<void> _sendMessage() async {
+    if (_controller.text.trim().isEmpty) return;
 
+    final text = _controller.text.trim();
+    _controller.clear();
+
+    try {
+      await supabase.from("messages").insert({
+        "user_id": userId,
+        "sender": "user",
+        "receiver_id": adminId,
+        "text": text,
+      });
+    } catch (e) {
+      debugPrint("❌ Supabase insert failed: $e");
+    }
+  }
 
   // ✅ Chat bubble
   Widget _chatBubble({required String text, required bool isMe}) {
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
+
     return Row(
-      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment:
+          isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!isMe)
@@ -122,13 +124,21 @@ class _ChatPageState extends State<ChatPage> {
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(18),
                 topRight: const Radius.circular(18),
-                bottomLeft: isMe ? const Radius.circular(18) : const Radius.circular(0),
-                bottomRight: isMe ? const Radius.circular(0) : const Radius.circular(18),
+                bottomLeft: isMe
+                    ? const Radius.circular(18)
+                    : const Radius.circular(0),
+                bottomRight: isMe
+                    ? const Radius.circular(0)
+                    : const Radius.circular(18),
               ),
             ),
             child: Text(
               text,
-              style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
+              textAlign: isRTL ? TextAlign.right : TextAlign.left,
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
             ),
           ),
         ),
@@ -145,6 +155,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!; // ✅ localization
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFC0CB),
       appBar: AppBar(
@@ -155,7 +168,8 @@ class _ChatPageState extends State<ChatPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Live Chat",
+          loc.liveChat,
+          textAlign: isRTL ? TextAlign.right : TextAlign.left,
           style: GoogleFonts.poppins(
             color: Colors.black,
             fontWeight: FontWeight.w600,
@@ -173,7 +187,8 @@ class _ChatPageState extends State<ChatPage> {
           ),
           const SizedBox(height: 10),
           Text(
-            "Live Chat With Our Specialist",
+            loc.liveChatSpecialist,
+            textAlign: isRTL ? TextAlign.right : TextAlign.left,
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.w600,
               fontSize: 16,
@@ -195,6 +210,7 @@ class _ChatPageState extends State<ChatPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 12),
+
                   // Messages
                   Expanded(
                     child: ListView.builder(
@@ -209,17 +225,19 @@ class _ChatPageState extends State<ChatPage> {
                       },
                     ),
                   ),
+
                   // Input field
                   SafeArea(
                     child: Container(
                       margin: const EdgeInsets.all(12),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color:Colors.black.withValues(alpha: 0.5),
+                            color: Colors.black.withOpacity(0.08),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -227,14 +245,19 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.chat_bubble_outline, color: Colors.grey, size: 22),
+                          const Icon(Icons.chat_bubble_outline,
+                              color: Colors.grey, size: 22),
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
                               controller: _controller,
+                              textAlign: isRTL ? TextAlign.right : TextAlign.left,
                               decoration: InputDecoration(
-                                hintText: "Type your message...",
-                                hintStyle: GoogleFonts.poppins(color: Colors.grey, fontSize: 14),
+                                hintText: loc.typeMessage,
+                                hintStyle: GoogleFonts.poppins(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
                                 border: InputBorder.none,
                               ),
                               onSubmitted: (_) => _sendMessage(),
