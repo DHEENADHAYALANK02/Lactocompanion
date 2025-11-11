@@ -140,20 +140,21 @@
   "share": "Share",
   "unknown": "Unknown",
   "privacyPolicyTitle": "Privacy Policy",
-  "privacyIntro": "Welcome to Lactocompanion! Your privacy is important to us. This Privacy Policy describes how Lactocompanion we collects, uses, discloses, and protects personal information in compliance with applicable data protection laws, including the Indian IT Act and GDPR standards. By using our app, you agree to this Privacy Policy.",
+  "privacyIntro": "Welcome to Lactocompanion! Your privacy is important to us. This Privacy Policy describes how Lactocompanion collects, uses, discloses, and protects personal information in compliance with applicable data protection laws, including the Indian IT Act and GDPR standards. By using our app, you agree to this Privacy Policy.",
 
   "infoCollectTitle": "1. Information We Collect",
   "infoCollect1": "We may collect the following information from you when you use our services:",
   "infoCollect2": "• Personal Information: Name, email address, mobile number, and age.",
-  "infoCollect3": "• Usage Data: App activity, device information, IP address, and analytics data.",
-  "infoCollect4": "• Consultation Data: Messages or forms shared during free doctor consultations, used for safety and quality purposes.",
+  "infoCollect3": "• Usage Data: App activity, device information, and analytics data.",
+  "infoCollect4": "• Consultation Data: Messages or forms shared during free consultations, used for safety and quality purposes.",
   "infoCollect5": "• Technical Data: Error logs, performance statistics, and interaction patterns for improving user experience.",
+  "infoCollect6": "• The app does not collect IP addresses for geolocation data.",
 
   "infoUseTitle": "2. How We Use Your Information",
   "infoUse1": "We use your data to:",
   "infoUse2": "• Create and manage your user account.",
-  "infoUse3": "• Schedule and manage doctor consultations.",
-  "infoUse4": "• Provide educational, guidance, and awareness content.",
+  "infoUse3": "• Schedule and manage consultations.",
+  "infoUse4": "• Provide educational guidance and awareness content.",
   "infoUse5": "• Communicate updates, health tips, and reminders.",
   "infoUse6": "• Ensure security, prevent fraud, and comply with legal obligations.",
 
@@ -176,15 +177,10 @@
   "thirdParty1": "We use trusted tools such as Google Firebase and analytics services to enhance functionality.",
   "thirdParty2": "These services operate under their own privacy policies, which apply alongside this one.",
 
- "userRightsTitle": "7. Your Rights",
-"yourRightsTitle": "7. Your Rights",
-"userRights1": "You can request to:",
-"yourRights1": "You can request to:",
-"userRights2": "• Access, review, or correct your personal data.",
-"yourRights2": "• Access, review, or correct your personal data.",
-"userRights3": "• Delete your account and associated data.",
-"userRights4": "• Withdraw consent for data processing.",
-"userRights5": "To exercise these rights, contact us at lactocompanion@gmail.com.",
+  "yourRightsTitle": "7. Your Rights",
+  "yourRights1": "You can request to access, review, or correct your personal data.",
+  "yourRights2": "You can also request to delete your account or withdraw consent for data processing.",
+  "yourRights3": "To exercise these rights, contact us at lactocompanion@gmail.com.",
 
   "childrenPrivacyTitle": "8. Children’s Privacy",
   "childrenPrivacy1": "Our app is not intended for children under 13 years old.",
@@ -193,33 +189,22 @@
   "internationalTransferTitle": "9. International Data Transfers",
   "internationalTransfer1": "Some data may be processed on international servers through our technology providers. We ensure all transfers are protected by lawful data transfer mechanisms.",
 
-  "bugReportTitle": "10. Reporting Bugs and Content Issues",
-  "bugReport1": "• For technical bugs, lags, or login errors: rategletechnologies@gmail.com.",
-  "bugReport2": "• For content, guidance, or doctor consultation concerns: lactocompanion@gmail.com.",
-
-  "policyUpdateTitle": "11. Updates to This Privacy Policy",
-  "policyUpdate1": "We may revise this Privacy Policy periodically. The latest version will always be available inside the app.",
-  "policyUpdate2": "Continued use of the app after updates means you accept the latest version.",
-
-  "privacyContactTitle": "12. Contact for Privacy Concerns",
-  "privacyContact1": "• Privacy-related questions: lactocompanion@gmail.com.",
-  "privacyContact2": "• Technical development and maintenance: rategletechnologies@gmail.com.",
-
   "termsTitle": "Terms and Conditions",
   "termsIntro": "Welcome to Lactocompanion! Please read these Terms and Conditions carefully before using our app. By accessing or using Lactocompanion, you agree to be bound by these Terms.",
 
   "termsSection1Title": "1. About the App",
   "termsSection1_1": "Lactocompanion is a mobile application available on Android and iOS.",
-  "termsSection1_2": "The app provides educational, guidance, and awareness content about baby feeding, motherhood, and child care.",
-  "termsSection1_3": "It also offers free consultations with verified and licensed doctors.",
+  "termsSection1_2": "The app provides educational guidance and awareness about breast milk and feeding.",
+  "termsSection1_3": "The app offers free consultations and a live chat feature with certified breastfeeding experts, available in both English and Arabic, to provide personalized support and guidance.",
   "termsSection1_4": "Lactocompanion is owned and operated by Lactocompanion and technically developed by Rategle Technologies.",
 
-"termsSection2Title": "2. Medical Disclaimer",
-"termsSection2_1": "The information and consultations offered through Lactocompanion are for educational and awareness purposes only.",
-"termsSection2_2": "The app is not a substitute for professional medical diagnosis or emergency treatment.",
-"termsSection2_3": "Always consult a qualified healthcare provider for serious or urgent medical issues.",
-"termsSection2_4": "All consultations are provided by licensed medical professionals.",
-"termsSection2_5": "In case of medical emergencies, contact local emergency services immediately.",
+  "termsSection2Title": "2. Medical Disclaimer",
+  "termsSection2_1": "The information and consultations offered through Lactocompanion are for educational and awareness purposes only.",
+  "termsSection2_2": "The app is not a substitute for professional medical diagnosis or emergency treatment.",
+  "termsSection2_3": "Always consult a qualified healthcare provider for serious or urgent medical issues.",
+  "termsSection2_4": "All consultations are provided by licensed medical professionals.",
+  "termsSection2_5": "In case of medical emergencies, contact local emergency services immediately.",
+
   "termsSection3Title": "3. User Eligibility",
   "termsSection3_1": "You must be at least 13 years old to use the app.",
   "termsSection3_2": "If you are under 18, you must use the app under guardian supervision.",
@@ -233,45 +218,9 @@
   "termsSection5Title": "5. Intellectual Property",
   "termsSection5_1": "All content, including videos, images, guides, and consultation materials, is the property of Lactocompanion.",
   "termsSection5_2": "You may only use app content for personal and non-commercial purposes.",
-  "termsSection5_3": "Copying, redistributing, or modifying app content is strictly prohibited.",
-
-  "termsSection6Title": "6. Acceptable Use Policy",
-  "termsSection6_1": "You agree not to upload or distribute abusive, false, or illegal content.",
-  "termsSection6_2": "You must not misuse consultations or impersonate healthcare professionals.",
-  "termsSection6_3": "Violation of these rules may result in suspension or legal action.",
-
-  "termsSection7Title": "7. Free Consultation Terms",
-  "termsSection7_1": "Consultations are provided free of cost by verified doctors.",
-  "termsSection7_2": "Availability depends on doctor schedules and may change without notice.",
-  "termsSection7_3": "Any abuse, spam, or offensive behavior during consultations will result in suspension.",
-
-  "termsSection8Title": "8. Limitation of Liability",
-  "termsSection8_1": "Lactocompanion and its consulting doctors are not liable for any damages or consequences resulting from the use of app content or consultations.",
-  "termsSection8_2": "Users are responsible for how they interpret and act upon provided information.",
-
-  "termsSection9Title": "9. Reporting Issues",
-  "termsSection9_1": "• For bugs, crashes, or performance errors: rategletechnologies@gmail.com.",
-  "termsSection9_2": "• For content or consultation issues: lactocompanion@gmail.com.",
-
-  "termsSection10Title": "10. Indemnification",
-  "termsSection10_1": "You agree to indemnify and hold harmless Lactocompanion and its partners from claims, damages, or losses caused by your use or misuse of the app.",
-
-  "termsSection11Title": "11. Termination",
-  "termsSection11_1": "Lactocompanion may suspend or terminate accounts for violations, fraudulent activities, or legal obligations without prior notice.",
-
-  "termsSection12Title": "12. Governing Law",
-  "termsSection12_1": "These Terms shall be governed by the laws of India and subject to the jurisdiction of the courts in Trichy, Tamil Nadu.",
-
-  "termsSection13Title": "13. Modifications",
-  "termsSection13_1": "Lactocompanion may update or modify these Terms at any time. Continued use of the app indicates acceptance of the updated version.",
-
-  "termsSection14Title": "14. Contact Information",
-  "termsSection14_1": "• General and consultation inquiries: lactocompanion@gmail.com.",
-  "termsSection14_2": "• Technical or performance support: rategletechnologies@gmail.com.",
 
   "acknowledgmentTitle": "Acknowledgment",
   "acknowledgment1": "By using Lactocompanion, you acknowledge that you have read, understood, and agreed to this Privacy Policy and Terms & Conditions.",
-
   "profile": "Profile",
   "enterName": "Enter name",
   "noName": "No name",
@@ -420,9 +369,6 @@
   "feedbackError": "❌ Failed to submit feedback",
   "feedbackPleaseSelect": "Please select a rating! 🌟",
   "giveFeedback": "Give Feedback"
-
-
-
 
 
 }

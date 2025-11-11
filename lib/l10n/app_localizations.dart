@@ -803,7 +803,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyIntro.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Lactocompanion! Your privacy is important to us. This Privacy Policy describes how Lactocompanion we collects, uses, discloses, and protects personal information in compliance with applicable data protection laws, including the Indian IT Act and GDPR standards. By using our app, you agree to this Privacy Policy.'**
+  /// **'Welcome to Lactocompanion! Your privacy is important to us. This Privacy Policy describes how Lactocompanion collects, uses, discloses, and protects personal information in compliance with applicable data protection laws, including the Indian IT Act and GDPR standards. By using our app, you agree to this Privacy Policy.'**
   String get privacyIntro;
 
   /// No description provided for @infoCollectTitle.
@@ -827,13 +827,13 @@ abstract class AppLocalizations {
   /// No description provided for @infoCollect3.
   ///
   /// In en, this message translates to:
-  /// **'• Usage Data: App activity, device information, IP address, and analytics data.'**
+  /// **'• Usage Data: App activity, device information, and analytics data.'**
   String get infoCollect3;
 
   /// No description provided for @infoCollect4.
   ///
   /// In en, this message translates to:
-  /// **'• Consultation Data: Messages or forms shared during free doctor consultations, used for safety and quality purposes.'**
+  /// **'• Consultation Data: Messages or forms shared during free consultations, used for safety and quality purposes.'**
   String get infoCollect4;
 
   /// No description provided for @infoCollect5.
@@ -841,6 +841,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'• Technical Data: Error logs, performance statistics, and interaction patterns for improving user experience.'**
   String get infoCollect5;
+
+  /// No description provided for @infoCollect6.
+  ///
+  /// In en, this message translates to:
+  /// **'• The app does not collect IP addresses for geolocation data.'**
+  String get infoCollect6;
 
   /// No description provided for @infoUseTitle.
   ///
@@ -863,13 +869,13 @@ abstract class AppLocalizations {
   /// No description provided for @infoUse3.
   ///
   /// In en, this message translates to:
-  /// **'• Schedule and manage doctor consultations.'**
+  /// **'• Schedule and manage consultations.'**
   String get infoUse3;
 
   /// No description provided for @infoUse4.
   ///
   /// In en, this message translates to:
-  /// **'• Provide educational, guidance, and awareness content.'**
+  /// **'• Provide educational guidance and awareness content.'**
   String get infoUse4;
 
   /// No description provided for @infoUse5.
@@ -974,59 +980,29 @@ abstract class AppLocalizations {
   /// **'These services operate under their own privacy policies, which apply alongside this one.'**
   String get thirdParty2;
 
-  /// No description provided for @userRightsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'7. Your Rights'**
-  String get userRightsTitle;
-
   /// No description provided for @yourRightsTitle.
   ///
   /// In en, this message translates to:
   /// **'7. Your Rights'**
   String get yourRightsTitle;
 
-  /// No description provided for @userRights1.
-  ///
-  /// In en, this message translates to:
-  /// **'You can request to:'**
-  String get userRights1;
-
   /// No description provided for @yourRights1.
   ///
   /// In en, this message translates to:
-  /// **'You can request to:'**
+  /// **'You can request to access, review, or correct your personal data.'**
   String get yourRights1;
-
-  /// No description provided for @userRights2.
-  ///
-  /// In en, this message translates to:
-  /// **'• Access, review, or correct your personal data.'**
-  String get userRights2;
 
   /// No description provided for @yourRights2.
   ///
   /// In en, this message translates to:
-  /// **'• Access, review, or correct your personal data.'**
+  /// **'You can also request to delete your account or withdraw consent for data processing.'**
   String get yourRights2;
 
-  /// No description provided for @userRights3.
-  ///
-  /// In en, this message translates to:
-  /// **'• Delete your account and associated data.'**
-  String get userRights3;
-
-  /// No description provided for @userRights4.
-  ///
-  /// In en, this message translates to:
-  /// **'• Withdraw consent for data processing.'**
-  String get userRights4;
-
-  /// No description provided for @userRights5.
+  /// No description provided for @yourRights3.
   ///
   /// In en, this message translates to:
   /// **'To exercise these rights, contact us at lactocompanion@gmail.com.'**
-  String get userRights5;
+  String get yourRights3;
 
   /// No description provided for @childrenPrivacyTitle.
   ///
@@ -1058,60 +1034,6 @@ abstract class AppLocalizations {
   /// **'Some data may be processed on international servers through our technology providers. We ensure all transfers are protected by lawful data transfer mechanisms.'**
   String get internationalTransfer1;
 
-  /// No description provided for @bugReportTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'10. Reporting Bugs and Content Issues'**
-  String get bugReportTitle;
-
-  /// No description provided for @bugReport1.
-  ///
-  /// In en, this message translates to:
-  /// **'• For technical bugs, lags, or login errors: rategletechnologies@gmail.com.'**
-  String get bugReport1;
-
-  /// No description provided for @bugReport2.
-  ///
-  /// In en, this message translates to:
-  /// **'• For content, guidance, or doctor consultation concerns: lactocompanion@gmail.com.'**
-  String get bugReport2;
-
-  /// No description provided for @policyUpdateTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'11. Updates to This Privacy Policy'**
-  String get policyUpdateTitle;
-
-  /// No description provided for @policyUpdate1.
-  ///
-  /// In en, this message translates to:
-  /// **'We may revise this Privacy Policy periodically. The latest version will always be available inside the app.'**
-  String get policyUpdate1;
-
-  /// No description provided for @policyUpdate2.
-  ///
-  /// In en, this message translates to:
-  /// **'Continued use of the app after updates means you accept the latest version.'**
-  String get policyUpdate2;
-
-  /// No description provided for @privacyContactTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'12. Contact for Privacy Concerns'**
-  String get privacyContactTitle;
-
-  /// No description provided for @privacyContact1.
-  ///
-  /// In en, this message translates to:
-  /// **'• Privacy-related questions: lactocompanion@gmail.com.'**
-  String get privacyContact1;
-
-  /// No description provided for @privacyContact2.
-  ///
-  /// In en, this message translates to:
-  /// **'• Technical development and maintenance: rategletechnologies@gmail.com.'**
-  String get privacyContact2;
-
   /// No description provided for @termsTitle.
   ///
   /// In en, this message translates to:
@@ -1139,13 +1061,13 @@ abstract class AppLocalizations {
   /// No description provided for @termsSection1_2.
   ///
   /// In en, this message translates to:
-  /// **'The app provides educational, guidance, and awareness content about baby feeding, motherhood, and child care.'**
+  /// **'The app provides educational guidance and awareness about breast milk and feeding.'**
   String get termsSection1_2;
 
   /// No description provided for @termsSection1_3.
   ///
   /// In en, this message translates to:
-  /// **'It also offers free consultations with verified and licensed doctors.'**
+  /// **'The app offers free consultations and a live chat feature with certified breastfeeding experts, available in both English and Arabic, to provide personalized support and guidance.'**
   String get termsSection1_3;
 
   /// No description provided for @termsSection1_4.
@@ -1255,162 +1177,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You may only use app content for personal and non-commercial purposes.'**
   String get termsSection5_2;
-
-  /// No description provided for @termsSection5_3.
-  ///
-  /// In en, this message translates to:
-  /// **'Copying, redistributing, or modifying app content is strictly prohibited.'**
-  String get termsSection5_3;
-
-  /// No description provided for @termsSection6Title.
-  ///
-  /// In en, this message translates to:
-  /// **'6. Acceptable Use Policy'**
-  String get termsSection6Title;
-
-  /// No description provided for @termsSection6_1.
-  ///
-  /// In en, this message translates to:
-  /// **'You agree not to upload or distribute abusive, false, or illegal content.'**
-  String get termsSection6_1;
-
-  /// No description provided for @termsSection6_2.
-  ///
-  /// In en, this message translates to:
-  /// **'You must not misuse consultations or impersonate healthcare professionals.'**
-  String get termsSection6_2;
-
-  /// No description provided for @termsSection6_3.
-  ///
-  /// In en, this message translates to:
-  /// **'Violation of these rules may result in suspension or legal action.'**
-  String get termsSection6_3;
-
-  /// No description provided for @termsSection7Title.
-  ///
-  /// In en, this message translates to:
-  /// **'7. Free Consultation Terms'**
-  String get termsSection7Title;
-
-  /// No description provided for @termsSection7_1.
-  ///
-  /// In en, this message translates to:
-  /// **'Consultations are provided free of cost by verified doctors.'**
-  String get termsSection7_1;
-
-  /// No description provided for @termsSection7_2.
-  ///
-  /// In en, this message translates to:
-  /// **'Availability depends on doctor schedules and may change without notice.'**
-  String get termsSection7_2;
-
-  /// No description provided for @termsSection7_3.
-  ///
-  /// In en, this message translates to:
-  /// **'Any abuse, spam, or offensive behavior during consultations will result in suspension.'**
-  String get termsSection7_3;
-
-  /// No description provided for @termsSection8Title.
-  ///
-  /// In en, this message translates to:
-  /// **'8. Limitation of Liability'**
-  String get termsSection8Title;
-
-  /// No description provided for @termsSection8_1.
-  ///
-  /// In en, this message translates to:
-  /// **'Lactocompanion and its consulting doctors are not liable for any damages or consequences resulting from the use of app content or consultations.'**
-  String get termsSection8_1;
-
-  /// No description provided for @termsSection8_2.
-  ///
-  /// In en, this message translates to:
-  /// **'Users are responsible for how they interpret and act upon provided information.'**
-  String get termsSection8_2;
-
-  /// No description provided for @termsSection9Title.
-  ///
-  /// In en, this message translates to:
-  /// **'9. Reporting Issues'**
-  String get termsSection9Title;
-
-  /// No description provided for @termsSection9_1.
-  ///
-  /// In en, this message translates to:
-  /// **'• For bugs, crashes, or performance errors: rategletechnologies@gmail.com.'**
-  String get termsSection9_1;
-
-  /// No description provided for @termsSection9_2.
-  ///
-  /// In en, this message translates to:
-  /// **'• For content or consultation issues: lactocompanion@gmail.com.'**
-  String get termsSection9_2;
-
-  /// No description provided for @termsSection10Title.
-  ///
-  /// In en, this message translates to:
-  /// **'10. Indemnification'**
-  String get termsSection10Title;
-
-  /// No description provided for @termsSection10_1.
-  ///
-  /// In en, this message translates to:
-  /// **'You agree to indemnify and hold harmless Lactocompanion and its partners from claims, damages, or losses caused by your use or misuse of the app.'**
-  String get termsSection10_1;
-
-  /// No description provided for @termsSection11Title.
-  ///
-  /// In en, this message translates to:
-  /// **'11. Termination'**
-  String get termsSection11Title;
-
-  /// No description provided for @termsSection11_1.
-  ///
-  /// In en, this message translates to:
-  /// **'Lactocompanion may suspend or terminate accounts for violations, fraudulent activities, or legal obligations without prior notice.'**
-  String get termsSection11_1;
-
-  /// No description provided for @termsSection12Title.
-  ///
-  /// In en, this message translates to:
-  /// **'12. Governing Law'**
-  String get termsSection12Title;
-
-  /// No description provided for @termsSection12_1.
-  ///
-  /// In en, this message translates to:
-  /// **'These Terms shall be governed by the laws of India and subject to the jurisdiction of the courts in Trichy, Tamil Nadu.'**
-  String get termsSection12_1;
-
-  /// No description provided for @termsSection13Title.
-  ///
-  /// In en, this message translates to:
-  /// **'13. Modifications'**
-  String get termsSection13Title;
-
-  /// No description provided for @termsSection13_1.
-  ///
-  /// In en, this message translates to:
-  /// **'Lactocompanion may update or modify these Terms at any time. Continued use of the app indicates acceptance of the updated version.'**
-  String get termsSection13_1;
-
-  /// No description provided for @termsSection14Title.
-  ///
-  /// In en, this message translates to:
-  /// **'14. Contact Information'**
-  String get termsSection14Title;
-
-  /// No description provided for @termsSection14_1.
-  ///
-  /// In en, this message translates to:
-  /// **'• General and consultation inquiries: lactocompanion@gmail.com.'**
-  String get termsSection14_1;
-
-  /// No description provided for @termsSection14_2.
-  ///
-  /// In en, this message translates to:
-  /// **'• Technical or performance support: rategletechnologies@gmail.com.'**
-  String get termsSection14_2;
 
   /// No description provided for @acknowledgmentTitle.
   ///

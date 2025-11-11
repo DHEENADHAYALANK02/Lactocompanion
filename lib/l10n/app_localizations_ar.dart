@@ -393,6 +393,10 @@ class AppLocalizationsAr extends AppLocalizations {
       '• البيانات التقنية: سجلات الأخطاء وإحصاءات الأداء لتحسين تجربة المستخدم.';
 
   @override
+  String get infoCollect6 =>
+      '• لا يجمع التطبيق عناوين IP لأغراض تحديد الموقع الجغرافي.';
+
+  @override
   String get infoUseTitle => '2. كيفية استخدام المعلومات';
 
   @override
@@ -469,32 +473,19 @@ class AppLocalizationsAr extends AppLocalizations {
       'تخضع هذه الخدمات لسياساتها الخاصة إلى جانب هذه السياسة.';
 
   @override
-  String get userRightsTitle => '7. حقوقك';
+  String get yourRightsTitle => '7. حقوقك';
 
   @override
-  String get yourRightsTitle => '7. Your Rights';
+  String get yourRights1 =>
+      'يمكنك طلب الوصول إلى بياناتك الشخصية أو مراجعتها أو تصحيحها.';
 
   @override
-  String get userRights1 => 'يمكنك طلب ما يلي:';
+  String get yourRights2 =>
+      'يمكنك أيضًا طلب حذف حسابك أو سحب موافقتك على معالجة البيانات.';
 
   @override
-  String get yourRights1 => 'You can request to:';
-
-  @override
-  String get userRights2 => '• الوصول إلى بياناتك الشخصية أو تصحيحها أو حذفها.';
-
-  @override
-  String get yourRights2 => '• Access, review, or correct your personal data.';
-
-  @override
-  String get userRights3 => '• سحب موافقتك على معالجة البيانات.';
-
-  @override
-  String get userRights4 => '• التواصل معنا عبر lactocompanion@gmail.com.';
-
-  @override
-  String get userRights5 =>
-      'To exercise these rights, contact us at lactocompanion@gmail.com.';
+  String get yourRights3 =>
+      'للاستفسار، يمكنك التواصل معنا عبر lactocompanion@gmail.com.';
 
   @override
   String get childrenPrivacyTitle => '8. خصوصية الأطفال';
@@ -514,36 +505,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'قد تتم معالجة بعض البيانات على خوادم دولية متوافقة مع معايير GDPR.';
 
   @override
-  String get bugReportTitle => '10. الإبلاغ عن الأخطاء';
-
-  @override
-  String get bugReport1 => '• للأخطاء التقنية: rategletechnologies@gmail.com';
-
-  @override
-  String get bugReport2 =>
-      '• لمشاكل المحتوى أو الاستشارات: lactocompanion@gmail.com';
-
-  @override
-  String get policyUpdateTitle => '11. تحديثات السياسة';
-
-  @override
-  String get policyUpdate1 =>
-      'قد نقوم بتحديث هذه السياسة من وقت لآخر، وستكون النسخة الأحدث متاحة داخل التطبيق.';
-
-  @override
-  String get policyUpdate2 =>
-      'استخدامك المستمر بعد التحديث يعني موافقتك على النسخة الجديدة.';
-
-  @override
-  String get privacyContactTitle => '12. التواصل بخصوص الخصوصية';
-
-  @override
-  String get privacyContact1 => '• للاستفسارات: lactocompanion@gmail.com';
-
-  @override
-  String get privacyContact2 => '• للدعم الفني: rategletechnologies@gmail.com';
-
-  @override
   String get termsTitle => 'الشروط والأحكام';
 
   @override
@@ -559,10 +520,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get termsSection1_2 =>
-      'يقدم محتوى تعليميًا وتوعويًا للأمهات ومقدمي الرعاية.';
+      'يقدم التطبيق محتوى تعليميًا وتوعويًا حول حليب الأم والتغذية.';
 
   @override
-  String get termsSection1_3 => 'كما يوفر استشارات مجانية مع أطباء موثوقين.';
+  String get termsSection1_3 =>
+      'يوفر التطبيق استشارات مجانية وميزة الدردشة المباشرة مع خبراء رضاعة معتمدين، متاحين باللغتين الإنجليزية والعربية لتقديم الدعم والإرشاد الشخصي.';
 
   @override
   String get termsSection1_4 =>
@@ -622,110 +584,15 @@ class AppLocalizationsAr extends AppLocalizations {
       'Misuse, impersonation, or sharing of accounts is prohibited and may result in termination.';
 
   @override
-  String get termsSection5Title => '5. Intellectual Property';
+  String get termsSection5Title => '5. الملكية الفكرية';
 
   @override
   String get termsSection5_1 =>
-      'All content, including videos, images, guides, and consultation materials, is the property of Lactocompanion.';
+      'جميع المحتويات، بما في ذلك مقاطع الفيديو والصور والإرشادات ومواد الاستشارة، هي ملك لتطبيق Lactocompanion.';
 
   @override
   String get termsSection5_2 =>
-      'You may only use app content for personal and non-commercial purposes.';
-
-  @override
-  String get termsSection5_3 =>
-      'Copying, redistributing, or modifying app content is strictly prohibited.';
-
-  @override
-  String get termsSection6Title => '6. Acceptable Use Policy';
-
-  @override
-  String get termsSection6_1 =>
-      'You agree not to upload or distribute abusive, false, or illegal content.';
-
-  @override
-  String get termsSection6_2 =>
-      'You must not misuse consultations or impersonate healthcare professionals.';
-
-  @override
-  String get termsSection6_3 =>
-      'Violation of these rules may result in suspension or legal action.';
-
-  @override
-  String get termsSection7Title => '7. Free Consultation Terms';
-
-  @override
-  String get termsSection7_1 =>
-      'Consultations are provided free of cost by verified doctors.';
-
-  @override
-  String get termsSection7_2 =>
-      'Availability depends on doctor schedules and may change without notice.';
-
-  @override
-  String get termsSection7_3 =>
-      'Any abuse, spam, or offensive behavior during consultations will result in suspension.';
-
-  @override
-  String get termsSection8Title => '8. Limitation of Liability';
-
-  @override
-  String get termsSection8_1 =>
-      'Lactocompanion and its consulting doctors are not liable for any damages or consequences resulting from the use of app content or consultations.';
-
-  @override
-  String get termsSection8_2 =>
-      'Users are responsible for how they interpret and act upon provided information.';
-
-  @override
-  String get termsSection9Title => '9. Reporting Issues';
-
-  @override
-  String get termsSection9_1 =>
-      '• For bugs, crashes, or performance errors: rategletechnologies@gmail.com.';
-
-  @override
-  String get termsSection9_2 =>
-      '• For content or consultation issues: lactocompanion@gmail.com.';
-
-  @override
-  String get termsSection10Title => '10. Indemnification';
-
-  @override
-  String get termsSection10_1 =>
-      'You agree to indemnify and hold harmless Lactocompanion and its partners from claims, damages, or losses caused by your use or misuse of the app.';
-
-  @override
-  String get termsSection11Title => '11. Termination';
-
-  @override
-  String get termsSection11_1 =>
-      'Lactocompanion may suspend or terminate accounts for violations, fraudulent activities, or legal obligations without prior notice.';
-
-  @override
-  String get termsSection12Title => '12. Governing Law';
-
-  @override
-  String get termsSection12_1 =>
-      'These Terms shall be governed by the laws of India and subject to the jurisdiction of the courts in Trichy, Tamil Nadu.';
-
-  @override
-  String get termsSection13Title => '13. Modifications';
-
-  @override
-  String get termsSection13_1 =>
-      'Lactocompanion may update or modify these Terms at any time. Continued use of the app indicates acceptance of the updated version.';
-
-  @override
-  String get termsSection14Title => '14. Contact Information';
-
-  @override
-  String get termsSection14_1 =>
-      '• General and consultation inquiries: lactocompanion@gmail.com.';
-
-  @override
-  String get termsSection14_2 =>
-      '• Technical or performance support: rategletechnologies@gmail.com.';
+      'يمكنك استخدام محتوى التطبيق فقط لأغراض شخصية وغير تجارية.';
 
   @override
   String get acknowledgmentTitle => 'إقرار المستخدم';

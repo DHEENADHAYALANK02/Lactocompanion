@@ -1,40 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'l10n/app_localizations.dart';
 
 // Screens import
 import 'Screens/LoginPage/newpasswordpage.dart';
 import 'Screens/Welcome/welcomepage.dart';
 import 'Screens/Home/homepage.dart';
-import 'Screens/Profile/language.dart'; // ✅ Added import
+import 'Screens/Profile/language.dart';
 
-/// Global navigator key → auth events handle panna
+/// Global navigator key → for auth and screen navigation
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ Supabase Initialize
-  await Supabase.initialize(
-    url: 'https://uyncpwahvqntrfvdtcxy.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5bmNwd2FodnFudHJmdmR0Y3h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NjExMzAsImV4cCI6MjA3MzUzNzEzMH0.3kr69KX4mB-wS1mrGH6mQuq-xi0o4ctI6ianukP3CcI',
-  );
-
+  // 🚀 Run UI immediately (don’t block with Supabase init)
   runApp(const MyApp());
+
+  // ✅ Initialize Supabase in background
+  try {
+    await Supabase.initialize(
+      url: 'https://uyncpwahvqntrfvdtcxy.supabase.co',
+      anonKey:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5bmNwd2FodnFudHJmdmR0Y3h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5NjExMzAsImV4cCI6MjA3MzUzNzEzMH0.3kr69KX4mB-wS1mrGH6mQuq-xi0o4ctI6ianukP3CcI',
+    );
+    debugPrint("✅ Supabase initialized successfully");
+  } catch (e) {
+    debugPrint("❌ Supabase init failed: $e");
+  }
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  /// Static function → dynamic language change
+  /// Change language dynamically
   static void setLocale(BuildContext context, Locale newLocale) async {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state?.setLocale(newLocale);
 
-    // ✅ Save locale to SharedPreferences
+    // Save to SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("app_lang", newLocale.languageCode);
   }
@@ -52,22 +59,15 @@ class _MyAppState extends State<MyApp> {
     _loadSavedLocale();
   }
 
-  /// ✅ Load saved language from SharedPreferences
   Future<void> _loadSavedLocale() async {
     final prefs = await SharedPreferences.getInstance();
     final langCode = prefs.getString("app_lang");
     if (langCode != null && langCode.isNotEmpty) {
-      setState(() {
-        _locale = Locale(langCode);
-      });
+      setState(() => _locale = Locale(langCode));
     }
   }
 
-  void setLocale(Locale locale) {
-    setState(() {
-      _locale = locale;
-    });
-  }
+  void setLocale(Locale locale) => setState(() => _locale = locale);
 
   @override
   Widget build(BuildContext context) {
@@ -77,12 +77,9 @@ class _MyAppState extends State<MyApp> {
       title: "Lacto Companion",
       theme: ThemeData(primarySwatch: Colors.pink),
 
-      // ✅ Localization Setup
+      // 🌍 Localization
       locale: _locale,
-      supportedLocales: const [
-        Locale('en'), // English
-        Locale('ar'), // Arabic
-      ],
+      supportedLocales: const [Locale('en'), Locale('ar')],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -92,14 +89,12 @@ class _MyAppState extends State<MyApp> {
       localeResolutionCallback: (locale, supportedLocales) {
         if (locale == null) return const Locale('en');
         for (var supported in supportedLocales) {
-          if (supported.languageCode == locale.languageCode) {
-            return supported;
-          }
+          if (supported.languageCode == locale.languageCode) return supported;
         }
         return const Locale('en');
       },
 
-      // 🔑 Add this builder for RTL support
+      // 🔤 RTL builder
       builder: (context, child) {
         return Directionality(
           textDirection:
@@ -108,13 +103,13 @@ class _MyAppState extends State<MyApp> {
         );
       },
 
-      // ✅ The first screen is AppEntry (decides which screen to show)
+      // 🏁 Start
       home: const AppEntry(),
     );
   }
 }
 
-/// 🚀 AppEntry → checks if language already chosen before showing WelcomePage
+/// 🚀 AppEntry → checks if language is already chosen
 class AppEntry extends StatefulWidget {
   const AppEntry({super.key});
 
@@ -133,13 +128,18 @@ class _AppEntryState extends State<AppEntry> {
   }
 
   Future<void> _checkLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final lang = prefs.getString("app_lang");
-    debugPrint("🟡 [AppEntry] Found language: $lang");
-    setState(() {
-      _languageChosen = lang != null && lang.isNotEmpty;
-      _loading = false;
-    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final lang = prefs.getString("app_lang");
+      debugPrint("🟡 [AppEntry] Found language: $lang");
+      setState(() {
+        _languageChosen = lang != null && lang.isNotEmpty;
+        _loading = false;
+      });
+    } catch (e) {
+      debugPrint("❌ SharedPreferences error: $e");
+      setState(() => _loading = false);
+    }
   }
 
   @override
@@ -149,7 +149,16 @@ class _AppEntryState extends State<AppEntry> {
     if (_loading) {
       return const Scaffold(
         backgroundColor: Colors.white,
-        body: Center(child: CircularProgressIndicator(color: Colors.pink)),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(color: Colors.pink),
+              SizedBox(height: 16),
+              Text("Loading...", style: TextStyle(color: Colors.pink)),
+            ],
+          ),
+        ),
       );
     }
 
@@ -163,7 +172,7 @@ class _AppEntryState extends State<AppEntry> {
   }
 }
 
-/// ✅ Decides whether → Home / Welcome (after language selection)
+/// ✅ SessionRedirector → decides Home or Welcome
 class SessionRedirector extends StatefulWidget {
   const SessionRedirector({super.key});
 
@@ -182,42 +191,48 @@ class _SessionRedirectorState extends State<SessionRedirector> {
   }
 
   Future<void> _checkSession() async {
-    // ✅ Check existing session
-    final session = Supabase.instance.client.auth.currentSession;
+    try {
+      final session = Supabase.instance.client.auth.currentSession;
+      if (session != null) {
+        _screen = const HomePage();
+      } else {
+        _screen = const WelcomePage();
+      }
 
-    if (session != null) {
-      _screen = const HomePage();
-    } else {
-      _screen = const WelcomePage();
+      setState(() => _loading = false);
+
+      // Auth event listener
+      Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+        final event = data.event;
+
+        if (event == AuthChangeEvent.passwordRecovery) {
+          navigatorKey.currentState?.pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const NewPasswordPage()),
+            (route) => false,
+          );
+        }
+
+        if (event == AuthChangeEvent.signedIn) {
+          navigatorKey.currentState?.pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const HomePage()),
+            (route) => false,
+          );
+        }
+
+        if (event == AuthChangeEvent.signedOut) {
+          navigatorKey.currentState?.pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const WelcomePage()),
+            (route) => false,
+          );
+        }
+      });
+    } catch (e) {
+      debugPrint("❌ Session check failed: $e");
+      setState(() {
+        _loading = false;
+        _screen = const WelcomePage();
+      });
     }
-
-    setState(() => _loading = false);
-
-    // ✅ Listen for auth changes
-    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
-      final event = data.event;
-
-      if (event == AuthChangeEvent.passwordRecovery) {
-        navigatorKey.currentState?.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const NewPasswordPage()),
-          (route) => false,
-        );
-      }
-
-      if (event == AuthChangeEvent.signedIn) {
-        navigatorKey.currentState?.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const HomePage()),
-          (route) => false,
-        );
-      }
-
-      if (event == AuthChangeEvent.signedOut) {
-        navigatorKey.currentState?.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const WelcomePage()),
-          (route) => false,
-        );
-      }
-    });
   }
 
   @override
@@ -232,4 +247,4 @@ class _SessionRedirectorState extends State<SessionRedirector> {
     }
     return _screen;
   }
-} 
+}
