@@ -834,4 +834,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get giveFeedback => 'Give Feedback';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountConfirmation =>
+      'Are you sure you want to delete your account?';
+
+  @override
+  String get deleteAccountWarning =>
+      'This action is permanent and cannot be undone. All your data, videos, and progress will be permanently deleted.';
+
+  @override
+  String get deleteAccountConfirm => 'Yes, Delete Account';
+
+  @override
+  String get accountDeleted => 'Account deleted successfully';
 }

@@ -360,6 +360,95 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     });
   }
 
+  Future<void> _handleDeleteAccount() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Account'),
+        content: const Text(
+          'This will permanently delete your account, authentication access, and all associated personal data. This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    final session = supabase.auth.currentSession;
+    if (session == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Session expired. Please login again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    bool loaderShown = false;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        loaderShown = true;
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
+    try {
+      final response = await supabase.functions.invoke(
+        'delete-account',
+        headers: {
+          'Authorization': 'Bearer ${session.accessToken}',
+        },
+      );
+
+      final data = response.data as Map<String, dynamic>?;
+
+      if (data == null || data['success'] != true) {
+        throw Exception('Delete failed');
+      }
+
+      if (loaderShown && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+
+      try {
+        await supabase.auth.signOut();
+      } catch (_) {}
+
+      if (mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+      }
+    } catch (e) {
+      if (loaderShown && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to delete account. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   // 🔥 LOCALIZED "GIVE FEEDBACK" FIX HERE
   Widget _buildMenuItems(AppLocalizations loc) {
     return Column(
@@ -370,14 +459,48 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
         const SizedBox(height: 16),
         _buildMenuItem(loc.privacyTitle, Icons.privacy_tip, onTap: _navigateToPrivacyPolicy),
         const SizedBox(height: 16),
+        _buildMenuItem('Delete Account', Icons.delete_forever, isLogout: false, onTap: _handleDeleteAccount),
+        const SizedBox(height: 16),
         _buildMenuItem(loc.logout, Icons.logout, isLogout: true, onTap: _handleLogout),
       ],
     );
   }
 
+  Widget _buildMenuItem(String title, IconData icon,
+      {bool isLogout = false, VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromRGBO(0, 0, 0, 0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Icon(icon,
+                color: isLogout ? Colors.red : const Color(0xFFFF5A6B)),
+            const SizedBox(width: 12),
+            Text(title,
+                style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isLogout ? Colors.red : Colors.black)),
+            const Spacer(),
+            const Icon(Icons.chevron_right, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
 
-
-  
   Future<void> _loadUserData() async {
     final user = supabase.auth.currentUser;
     if (user != null) {
@@ -830,40 +953,6 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               color: Colors.white,
             ),
           ),
-        ),
-      ),
-    );
-  }
-  Widget _buildMenuItem(String title, IconData icon,
-      {bool isLogout = false, VoidCallback? onTap}) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromRGBO(0, 0, 0, 0.05),
-              blurRadius: 5,
-              offset: const Offset(0, 2),
-            )
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(icon,
-                color: isLogout ? Colors.red : const Color(0xFFFF5A6B)),
-            const SizedBox(width: 12),
-            Text(title,
-                style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: isLogout ? Colors.red : Colors.black)),
-            const Spacer(),
-            const Icon(Icons.chevron_right, color: Colors.grey),
-          ],
         ),
       ),
     );

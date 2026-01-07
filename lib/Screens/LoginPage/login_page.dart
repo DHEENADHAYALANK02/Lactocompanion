@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lactocompanion/Screens/SignUp/signuppage.dart';
-import '../../l10n/app_localizations.dart'; // ✅ Localization import
+import '../../l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -172,30 +172,6 @@ class _LoginPageState extends State<LoginPage>
     setState(() => isLoading = false);
   }
 
-  // Google Login
-  Future<void> loginWithGoogle() async {
-    final loc = AppLocalizations.of(context)!;
-
-    setState(() => isLoading = true);
-    try {
-      await supabase.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: "io.supabase.flutter://login-callback",
-      );
-
-      if (!mounted) return;
-      final user = supabase.auth.currentUser;
-      if (user != null) {
-        showPopup("🚀 ${loc.loggedInAs} ${user.email}");
-      }
-    } catch (e) {
-      if (!mounted) return;
-      showPopup(loc.googleLoginFailed, isError: true);
-    }
-    if (!mounted) return;
-    setState(() => isLoading = false);
-  }
-
   // Reset Password
   Future<void> resetPassword() async {
     final loc = AppLocalizations.of(context)!;
@@ -308,40 +284,7 @@ class _LoginPageState extends State<LoginPage>
                             ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-
-                  Row(
-                    children: [
-                      const Expanded(child: Divider(thickness: 1)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(loc.orContinueWith),
-                      ),
-                      const Expanded(child: Divider(thickness: 1)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: OutlinedButton.icon(
-                      onPressed: isLoading ? null : loginWithGoogle,
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.grey),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      icon: Image.network(
-                        "https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png",
-                        height: 24,
-                      ),
-                      label: Text(loc.loginWithGoogle,
-                          style: GoogleFonts.poppins()),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40), // Increased space
 
                   Center(
                     child: Row(

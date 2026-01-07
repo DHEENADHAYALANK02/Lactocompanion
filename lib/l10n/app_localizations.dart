@@ -1639,6 +1639,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Give Feedback'**
   String get giveFeedback;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account?'**
+  String get deleteAccountConfirmation;
+
+  /// No description provided for @deleteAccountWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This action is permanent and cannot be undone. All your data, videos, and progress will be permanently deleted.'**
+  String get deleteAccountWarning;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Delete Account'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get accountDeleted;
 }
 
 class _AppLocalizationsDelegate

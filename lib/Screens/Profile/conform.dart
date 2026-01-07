@@ -5,8 +5,13 @@ import '../../main.dart';
 
 class BookingSuccessPage extends StatefulWidget {
   final String? selectedLanguage;
+  final bool isFirstTimeUser;  // ✅ Add this flag
 
-  const BookingSuccessPage({super.key, this.selectedLanguage});
+  const BookingSuccessPage({
+    super.key, 
+    this.selectedLanguage,
+    required this.isFirstTimeUser,  // ✅ Required parameter
+  });
 
   @override
   State<BookingSuccessPage> createState() => _BookingSuccessPageState();
@@ -96,18 +101,27 @@ class _BookingSuccessPageState extends State<BookingSuccessPage>
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        
-                        borderRadius: BorderRadius.circular(12),
+                    // ✅ Conditionally show back button
+                    if (!widget.isFirstTimeUser)
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.arrow_back,
+                              color: Color.fromARGB(255, 0, 0, 0), size: 24),
+                        ),
                       ),
-                      child: IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.arrow_back,
-                            color: Color.fromARGB(255, 0, 0, 0), size: 24),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
+                    
+                    // ✅ If first time user, add extra space instead of back button
+                    if (widget.isFirstTimeUser) 
+                      SizedBox(width: isTablet ? 24 : 16),
+                    
+                    // ✅ If not first time user, add spacing after back button
+                    if (!widget.isFirstTimeUser) 
+                      const SizedBox(width: 12),
+                    
                     Expanded(
                       child: Text(
                         loc.languageConfirmation,

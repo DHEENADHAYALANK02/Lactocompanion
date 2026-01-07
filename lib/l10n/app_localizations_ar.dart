@@ -9,10 +9,10 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appTitle => 'لاكتو كومبانيون';
+  String get appTitle => 'LactoCompanion';
 
   @override
-  String get welcome => 'مرحبا';
+  String get welcome => 'مرحبًا';
 
   @override
   String get cart => 'عربة التسوق';
@@ -45,28 +45,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get patientInformation => 'معلومات المريض';
 
   @override
-  String get doctor => 'الطبيب';
+  String get doctor => 'طبيب';
 
   @override
-  String get hospital => 'المستشفى';
+  String get hospital => 'مستشفى';
 
   @override
-  String get date => 'التاريخ';
+  String get date => 'تاريخ';
 
   @override
-  String get time => 'الوقت';
+  String get time => 'وقت';
 
   @override
   String get fullName => 'الاسم الكامل';
 
   @override
-  String get mobileNumber => 'رقم الهاتف';
+  String get mobileNumber => 'رقم الجوال';
 
   @override
   String get age => 'العمر';
 
   @override
-  String get email => 'بريد إلكتروني';
+  String get email => 'البريد الإلكتروني';
 
   @override
   String get languageConfirmation => 'تأكيد اللغة';
@@ -295,7 +295,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get doctorDetails => 'تفاصيل الطبيب';
 
   @override
-  String get bookAppointment => 'حجز موعد';
+  String get bookAppointment => 'احجز موعدًا';
 
   @override
   String get oneTapTo => 'بنقرة واحدة';
@@ -331,7 +331,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get videos => 'الفيديوهات';
 
   @override
-  String get noVideosFound => 'لا توجد فيديوهات';
+  String get noVideosFound => 'لم يتم العثور على فيديوهات';
 
   @override
   String get watchNow => 'شاهد الآن';
@@ -361,7 +361,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get share => 'مشاركة';
 
   @override
-  String get unknown => 'Unknown';
+  String get unknown => 'غير معروف';
 
   @override
   String get privacyPolicyTitle => 'سياسة الخصوصية';
@@ -374,7 +374,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get infoCollectTitle => '1. المعلومات التي نجمعها';
 
   @override
-  String get infoCollect1 => 'قد نقوم بجمع المعلومات التالية:';
+  String get infoCollect1 =>
+      'قد نقوم بجمع المعلومات التالية منك عند استخدامك للخدمات:';
 
   @override
   String get infoCollect2 =>
@@ -386,91 +387,93 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get infoCollect4 =>
-      '• بيانات الاستشارة: الرسائل أو النماذج التي يتم مشاركتها أثناء الاستشارات الطبية المجانية.';
+      '• بيانات الاستشارة: الرسائل أو النماذج التي يتم مشاركتها أثناء الاستشارات المجانية، تُستخدم لأغراض السلامة والجودة.';
 
   @override
   String get infoCollect5 =>
-      '• البيانات التقنية: سجلات الأخطاء وإحصاءات الأداء لتحسين تجربة المستخدم.';
+      '• البيانات التقنية: سجلات الأخطاء وإحصاءات الأداء وأنماط التفاعل لتحسين تجربة المستخدم.';
 
   @override
   String get infoCollect6 =>
-      '• لا يجمع التطبيق عناوين IP لأغراض تحديد الموقع الجغرافي.';
+      '• لا يجمع التطبيق عناوين IP لأغراض بيانات الموقع الجغرافي.';
 
   @override
-  String get infoUseTitle => '2. كيفية استخدام المعلومات';
+  String get infoUseTitle => '2. كيفية استخدام معلوماتك';
 
   @override
   String get infoUse1 => 'نستخدم بياناتك من أجل:';
 
   @override
-  String get infoUse2 => '• إنشاء وإدارة حساب المستخدم.';
+  String get infoUse2 => '• إنشاء وإدارة حساب المستخدم الخاص بك.';
 
   @override
-  String get infoUse3 => '• إدارة الاستشارات الطبية المجانية.';
+  String get infoUse3 => '• جدولة وإدارة الاستشارات.';
 
   @override
-  String get infoUse4 =>
-      '• تقديم محتوى تعليمي وإرشادي وتوعوي للأمهات ومقدمي الرعاية.';
+  String get infoUse4 => '• تقديم محتوى تعليمي وإرشادي وتوعوي.';
 
   @override
-  String get infoUse5 => '• إرسال النصائح الصحية والتحديثات والتذكيرات.';
+  String get infoUse5 => '• التواصل بالتحديثات والنصائح الصحية والتذكيرات.';
 
   @override
-  String get infoUse6 => '• ضمان الأمان والامتثال للقوانين.';
+  String get infoUse6 =>
+      '• ضمان الأمان، منع الاحتيال، والامتثال للالتزامات القانونية.';
 
   @override
-  String get infoShareTitle => '3. مشاركة المعلومات';
+  String get infoShareTitle => '3. مشاركة المعلومات والكشف عنها';
 
   @override
   String get infoShare1 =>
-      'نحن نحترم خصوصيتك — لا نقوم ببيع أو مشاركة بياناتك مع أي طرف خارجي.';
+      'نحن نحترم خصوصيتك. لا نقوم ببيع أو تأجير أو تداول معلوماتك الشخصية.';
 
   @override
   String get infoShare2 =>
-      'قد تتم مشاركة بيانات محدودة مع خدمات موثوقة مثل Google Firebase لأغراض المصادقة والتحليل.';
+      'قد نشارك معلومات محدودة مع خدمات موثوقة من أطراف ثالثة مثل Google Firebase للمصادقة والتحليل.';
 
   @override
-  String get infoShare3 => 'قد يتم الكشف عن المعلومات إذا طلب القانون ذلك.';
+  String get infoShare3 =>
+      'قد نكشف عن المعلومات إذا تطلب القانون أو أمر المحكمة أو السلطة الحكومية ذلك.';
 
   @override
-  String get infoShare4 => 'يلتزم جميع مزودي الخدمات باتفاقيات سرية صارمة.';
+  String get infoShare4 =>
+      'جميع الشركاء من الأطراف الثالثة ملتزمون باتفاقيات السرية وحماية البيانات.';
 
   @override
   String get dataSecurityTitle => '4. أمان البيانات';
 
   @override
   String get dataSecurity1 =>
-      'يتم تشفير جميع البيانات وتخزينها على خوادم آمنة مع تقييد الوصول للأشخاص المصرح لهم فقط.';
+      'نطبق إجراءات أمنية صارمة بما في ذلك التشفير والخوادم الآمنة والوصول المحدود للموظفين.';
 
   @override
   String get dataSecurity2 =>
-      'نستخدم بروتوكولات أمان قياسية لحماية بياناتك من الوصول غير المصرح به.';
+      'يتم تشفير جميع نقلات البيانات وتخزينها على خوادم آمنة.';
 
   @override
   String get dataSecurity3 =>
-      'لكن لا يوجد نظام عبر الإنترنت آمن بنسبة 100٪. استخدامك للتطبيق يكون على مسؤوليتك.';
+      'ومع ذلك، لا يمكن لأي نظام عبر الإنترنت ضمان أمان 100٪. أنت تستخدم التطبيق على مسؤوليتك الخاصة.';
 
   @override
   String get dataRetentionTitle => '5. الاحتفاظ بالبيانات';
 
   @override
   String get dataRetention1 =>
-      'نحتفظ ببياناتك طالما كان ذلك ضروريًا لتقديم الخدمة أو الامتثال للقانون.';
+      'نحتفظ ببياناتك فقط طالما كان ذلك ضروريًا لتقديم الخدمات أو كما يتطلب القانون.';
 
   @override
   String get dataRetention2 =>
-      'عند حذف الحساب، نقوم بإزالة جميع البيانات الشخصية خلال فترة زمنية معقولة.';
+      'عند حذف حسابك، نقوم بإزالة البيانات القابلة للتحديد خلال إطار زمني معقول.';
 
   @override
   String get thirdPartyTitle => '6. خدمات الجهات الخارجية';
 
   @override
   String get thirdParty1 =>
-      'نستخدم خدمات موثوقة مثل Google Firebase لتحسين الأداء والوظائف.';
+      'نستخدم أدوات موثوقة مثل Google Firebase وخدمات التحليل لتعزيز الوظائف.';
 
   @override
   String get thirdParty2 =>
-      'تخضع هذه الخدمات لسياساتها الخاصة إلى جانب هذه السياسة.';
+      'تعمل هذه الخدمات تحت سياسات الخصوصية الخاصة بها، والتي تنطبق جنبًا إلى جنب مع هذه السياسة.';
 
   @override
   String get yourRightsTitle => '7. حقوقك';
@@ -485,121 +488,121 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get yourRights3 =>
-      'للاستفسار، يمكنك التواصل معنا عبر lactocompanion@gmail.com.';
+      'لممارسة هذه الحقوق، اتصل بنا على lactocompanion@gmail.com.';
 
   @override
   String get childrenPrivacyTitle => '8. خصوصية الأطفال';
 
   @override
-  String get childrenPrivacy1 => 'التطبيق غير مخصص للأطفال دون 13 عامًا.';
+  String get childrenPrivacy1 => 'تطبيقنا غير مخصص للأطفال دون سن 13 عامًا.';
 
   @override
   String get childrenPrivacy2 =>
-      'سيتم حذف أي بيانات يتم جمعها من الأطفال على الفور.';
+      'إذا اكتشفنا بيانات تم جمعها من مستخدمين تقل أعمارهم عن 13 عامًا، فإننا نحذفها على الفور.';
 
   @override
   String get internationalTransferTitle => '9. نقل البيانات الدولي';
 
   @override
   String get internationalTransfer1 =>
-      'قد تتم معالجة بعض البيانات على خوادم دولية متوافقة مع معايير GDPR.';
+      'قد تتم معالجة بعض البيانات على خوادم دولية من خلال مزودي التكنولوجيا لدينا. نضمن حماية جميع عمليات النقل من خلال آليات نقل البيانات القانونية.';
 
   @override
   String get termsTitle => 'الشروط والأحكام';
 
   @override
   String get termsIntro =>
-      'مرحبًا بك في Lactocompanion! يرجى قراءة هذه الشروط بعناية، فباستخدامك للتطبيق، فإنك توافق عليها.';
+      'مرحبًا بك في Lactocompanion! يرجى قراءة هذه الشروط والأحكام بعناية قبل استخدام تطبيقنا. من خلال الوصول إلى تطبيق Lactocompanion أو استخدامه، فإنك توافق على الالتزام بهذه الشروط.';
 
   @override
-  String get termsSection1Title => '1. عن التطبيق';
+  String get termsSection1Title => '1. حول التطبيق';
 
   @override
   String get termsSection1_1 =>
-      'Lactocompanion هو تطبيق متاح على أنظمة Android وiOS.';
+      'Lactocompanion هو تطبيق جوال متاح على أنظمة Android و iOS.';
 
   @override
   String get termsSection1_2 =>
-      'يقدم التطبيق محتوى تعليميًا وتوعويًا حول حليب الأم والتغذية.';
+      'يوفر التطبيق إرشادات تعليمية وتوعوية حول حليب الثدي والرضاعة.';
 
   @override
   String get termsSection1_3 =>
-      'يوفر التطبيق استشارات مجانية وميزة الدردشة المباشرة مع خبراء رضاعة معتمدين، متاحين باللغتين الإنجليزية والعربية لتقديم الدعم والإرشاد الشخصي.';
+      'يقدم التطبيق استشارات مجانية وميزة دردشة مباشرة مع خبراء الرضاعة المعتمدين، متاحة باللغتين الإنجليزية والعربية، لتقديم الدعم والإرشاد الشخصي.';
 
   @override
   String get termsSection1_4 =>
-      'تم تصميم وتطوير التطبيق بواسطة Rategle Technologies.';
+      'تطبيق Lactocompanion مملوك وتشغله Lactocompanion وتم تطويره تقنيًا بواسطة Rategle Technologies.';
 
   @override
-  String get termsSection2Title => '2. Medical Disclaimer';
+  String get termsSection2Title => '2. إخلاء المسؤولية الطبية';
 
   @override
   String get termsSection2_1 =>
-      'The information and consultations offered through Lactocompanion are for educational and awareness purposes only.';
+      'المعلومات والاستشارات المقدمة من خلال تطبيق Lactocompanion هي لأغراض تعليمية وتوعوية فقط.';
 
   @override
   String get termsSection2_2 =>
-      'The app is not a substitute for professional medical diagnosis or emergency treatment.';
+      'التطبيق ليس بديلاً عن التشخيص الطبي المهني أو العلاج في حالات الطوارئ.';
 
   @override
   String get termsSection2_3 =>
-      'Always consult a qualified healthcare provider for serious or urgent medical issues.';
+      'استشر دائمًا مقدم الرعاية الصحية المؤهل لمشاكلك الطبية الخطيرة أو العاجلة.';
 
   @override
   String get termsSection2_4 =>
-      'All consultations are provided by licensed medical professionals.';
+      'يتم تقديم جميع الاستشارات من قبل متخصصين طبيين مرخصين.';
 
   @override
   String get termsSection2_5 =>
-      'In case of medical emergencies, contact local emergency services immediately.';
+      'في حالات الطوارئ الطبية، اتصل بخدمات الطوارئ المحلية على الفور.';
 
   @override
-  String get termsSection3Title => '3. User Eligibility';
+  String get termsSection3Title => '3. أهلية المستخدم';
 
   @override
   String get termsSection3_1 =>
-      'You must be at least 13 years old to use the app.';
+      'يجب أن يكون عمرك 13 عامًا على الأقل لاستخدام التطبيق.';
 
   @override
   String get termsSection3_2 =>
-      'If you are under 18, you must use the app under guardian supervision.';
+      'إذا كان عمرك أقل من 18 عامًا، فيجب عليك استخدام التطبيق تحت إشراف ولي الأمر.';
 
   @override
   String get termsSection3_3 =>
-      'By using the app, you confirm that all information you provide is accurate and complete.';
+      'باستخدامك للتطبيق، فإنك تؤكد أن جميع المعلومات التي تقدمها دقيقة وكاملة.';
 
   @override
-  String get termsSection4Title => '4. Account Registration and Security';
+  String get termsSection4Title => '4. تسجيل الحساب والأمان';
 
   @override
   String get termsSection4_1 =>
-      'Users can sign up using email or Google Authentication.';
+      'يمكن للمستخدمين التسجيل باستخدام البريد الإلكتروني أو المصادقة من Google.';
 
   @override
   String get termsSection4_2 =>
-      'You are responsible for keeping your login credentials secure.';
+      'أنت مسؤول عن الحفاظ على أمان بيانات اعتماد تسجيل الدخول الخاصة بك.';
 
   @override
   String get termsSection4_3 =>
-      'Misuse, impersonation, or sharing of accounts is prohibited and may result in termination.';
+      'يُحظر إساءة الاستخدام أو انتحال الشخصية أو مشاركة الحسابات وقد يؤدي إلى إنهاء الخدمة.';
 
   @override
   String get termsSection5Title => '5. الملكية الفكرية';
 
   @override
   String get termsSection5_1 =>
-      'جميع المحتويات، بما في ذلك مقاطع الفيديو والصور والإرشادات ومواد الاستشارة، هي ملك لتطبيق Lactocompanion.';
+      'جميع المحتويات، بما في ذلك مقاطع الفيديو والصور والأدلة ومواد الاستشارة، هي ملك لتطبيق Lactocompanion.';
 
   @override
   String get termsSection5_2 =>
-      'يمكنك استخدام محتوى التطبيق فقط لأغراض شخصية وغير تجارية.';
+      'يمكنك استخدام محتوى التطبيق للأغراض الشخصية وغير التجارية فقط.';
 
   @override
-  String get acknowledgmentTitle => 'إقرار المستخدم';
+  String get acknowledgmentTitle => 'إقرار';
 
   @override
   String get acknowledgment1 =>
-      'باستخدامك لتطبيق Lactocompanion، فإنك تؤكد أنك قرأت وفهمت ووافقت على سياسة الخصوصية والشروط والأحكام.';
+      'باستخدامك لتطبيق Lactocompanion، فإنك تقر بأنك قد قرأت وفهمت ووافقت على سياسة الخصوصية والشروط والأحكام هذه.';
 
   @override
   String get enterName => 'الرجاء إدخال اسمك';
@@ -608,7 +611,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noName => 'لا يوجد اسم';
 
   @override
-  String get enterEmail => 'الرجاء إدخال بريدك الإلكتروني';
+  String get enterEmail => 'أدخل البريد الإلكتروني';
 
   @override
   String get noEmail => 'لا يوجد بريد إلكتروني';
@@ -636,7 +639,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get aboutUsText =>
-      'في LactoCompanion، نسهل رعاية الأم والطفل بتوجيه موثوق ودعم صحي ذكي.\n\nتم التصميم والتطوير بواسطة Rategle Technologies';
+      'في LactoCompanion، نسهل رعاية الأم والطفل بتوجيه موثوق ودعم صحي ذكي.\n\nتم التصميم والتطوير بواسطة Rategle Technologies.';
 
   @override
   String get bookingSuccessful => 'تم الحجز بنجاح';
@@ -726,7 +729,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get friday => 'الجمعة';
 
   @override
-  String get nameTooShort => 'يجب أن يكون الاسم على الأقل 2 حروف';
+  String get nameTooShort => 'يجب أن يكون الاسم على الأقل 2 حرف';
 
   @override
   String get enterMobile => 'الرجاء إدخال رقم الجوال';
@@ -767,19 +770,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectTime => 'اختر الوقت';
 
   @override
-  String get phone => 'هاتف';
+  String get phone => 'الهاتف';
 
   @override
   String get patients => 'المرضى';
 
   @override
-  String get experience => 'خبرة';
+  String get experience => 'الخبرة';
 
   @override
-  String get rating => 'تقييم';
+  String get rating => 'التقييم';
 
   @override
-  String get bookingConfirmationSent => 'تم إرسال تأكيد الحجز. نراك قريباً!';
+  String get bookingConfirmationSent => 'تم إرسال تأكيد الحجز. نراك قريبًا!';
 
   @override
   String get viewAppointmentDetails => 'عرض تفاصيل الموعد';
@@ -830,5 +833,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get feedbackPleaseSelect => 'يرجى اختيار تقييم! 🌟';
 
   @override
-  String get giveFeedback => 'Give Feedback';
+  String get giveFeedback => 'أعطِ ملاحظاتك';
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get deleteAccountConfirmation => 'هل أنت متأكد أنك تريد حذف حسابك؟';
+
+  @override
+  String get deleteAccountWarning =>
+      'هذا الإجراء نهائي ولا يمكن التراجع عنه. سيتم حذف جميع بياناتك ومقاطع الفيديو وتقدمك بشكل دائم.';
+
+  @override
+  String get deleteAccountConfirm => 'نعم، احذف الحساب';
+
+  @override
+  String get accountDeleted => 'تم حذف الحساب بنجاح';
 }

@@ -44,8 +44,9 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage>
   Future<void> _initPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     final chosen = prefs.getBool('language_chosen') ?? false;
-    if (!mounted) return;
-    setState(() => isFirstTime = !chosen);
+    if (mounted) {
+      setState(() => isFirstTime = !chosen);
+    }
   }
 
   @override
@@ -56,8 +57,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage>
 
   @override
   Widget build(BuildContext context) {
-    print("✅ LanguageSelectionPage built");
-
     final loc = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     final isSmall = size.height < 700;
@@ -197,30 +196,34 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage>
                                       'app_lang', selectedLanguage);
                                   await prefs.setBool(
                                       'language_chosen', true);
+                                  
                                   final locale = Locale(selectedLanguage);
-                                  if (!mounted) return;
-                                  MyApp.setLocale(context, locale);
+                                  
+                                  if (mounted) {
+                                    MyApp.setLocale(context, locale);
 
-                                  Navigator.pushReplacement(
-                                    context,
-                                    PageRouteBuilder(
-                                      transitionDuration:
-                                          const Duration(milliseconds: 400),
-                                      pageBuilder: (_, __, ___) =>
-                                          BookingSuccessPage(
-                                        selectedLanguage:
-                                            selectedLanguage == 'ar'
-                                                ? 'Arabic'
-                                                : 'English',
+                                    Navigator.pushReplacement(
+                                      context,
+                                      PageRouteBuilder(
+                                        transitionDuration:
+                                            const Duration(milliseconds: 400),
+                                        pageBuilder: (_, __, ___) =>
+                                            BookingSuccessPage(
+                                          selectedLanguage:
+                                              selectedLanguage == 'ar'
+                                                  ? 'Arabic'
+                                                  : 'English',
+                                          isFirstTimeUser: isFirstTime, // ✅ FIX: Add this parameter
+                                        ),
+                                        transitionsBuilder:
+                                            (_, animation, __, child) =>
+                                                FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        ),
                                       ),
-                                      transitionsBuilder:
-                                          (_, animation, __, child) =>
-                                              FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      ),
-                                    ),
-                                  );
+                                    );
+                                  }
                                 },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: selectedLanguage.isEmpty
@@ -277,4 +280,3 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage>
     );
   }
 }
-

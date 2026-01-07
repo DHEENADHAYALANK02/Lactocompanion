@@ -131,85 +131,67 @@ class _SignupPageState extends State<SignupPage>
   }
 
   // Signup with Email
-  // Signup with Email
-Future<void> signUpWithEmail() async {
-  final loc = AppLocalizations.of(context)!;
-
-  if (nameController.text.isEmpty ||
-      emailController.text.isEmpty ||
-      passwordController.text.isEmpty) {
-    showPopup("⚠️ ${loc.fillAllFields}", isError: true);
-    return;
-  }
-
-  // ✅ Password minimum 6 chars validation
-  if (passwordController.text.length < 6) {
-    showPopup("⚠️ Password must be at least 6 characters long", isError: true);
-    return;
-  }
-
-  setState(() => isLoading = true);
-  try {
-    final res = await supabase.auth.signUp(
-      email: emailController.text.trim(),
-      password: passwordController.text,
-    );
-
-    final user = res.user;
-
-    if (!mounted) return;
-
-    if (user != null) {
-      // ✅ Insert profile with name
-      await supabase.from('profiles').upsert({
-        'id': user.id,
-        'name': nameController.text.trim(),
-      });
-
-      await saveCredentials(
-          emailController.text, passwordController.text, nameController.text);
-
-      // ✅ Redirect to HomePage
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
-        (route) => false,
-      );
-    } else {
-      showPopup("❌ ${loc.signupFailed}", isError: true);
-    }
-  } catch (e) {
-    if (!mounted) return;
-    String errorMessage = loc.somethingWentWrong;
-
-    if (e.toString().contains("user_already_exists")) {
-      errorMessage = loc.accountExists;
-    } else if (e.toString().contains("invalid_email")) {
-      errorMessage = loc.invalidEmail;
-    } else if (e.toString().contains("weak_password")) {
-      errorMessage = loc.weakPassword;
-    }
-
-    showPopup(errorMessage, isError: true);
-  }
-
-  if (!mounted) return;
-  setState(() => isLoading = false);
-}
-
-  // Google Signup
-  Future<void> signUpWithGoogle() async {
+  Future<void> signUpWithEmail() async {
     final loc = AppLocalizations.of(context)!;
+
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty) {
+      showPopup("⚠️ ${loc.fillAllFields}", isError: true);
+      return;
+    }
+
+    // ✅ Password minimum 6 chars validation
+    if (passwordController.text.length < 6) {
+      showPopup("⚠️ Password must be at least 6 characters long", isError: true);
+      return;
+    }
+
     setState(() => isLoading = true);
     try {
-      await supabase.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: "io.supabase.flutter://login-callback",
+      final res = await supabase.auth.signUp(
+        email: emailController.text.trim(),
+        password: passwordController.text,
       );
+
+      final user = res.user;
+
+      if (!mounted) return;
+
+      if (user != null) {
+        // ✅ Insert profile with name
+        await supabase.from('profiles').upsert({
+          'id': user.id,
+          'name': nameController.text.trim(),
+        });
+
+        await saveCredentials(
+            emailController.text, passwordController.text, nameController.text);
+
+        // ✅ Redirect to HomePage
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
+          (route) => false,
+        );
+      } else {
+        showPopup("❌ ${loc.signupFailed}", isError: true);
+      }
     } catch (e) {
       if (!mounted) return;
-      showPopup(loc.googleSignupFailed, isError: true);
+      String errorMessage = loc.somethingWentWrong;
+
+      if (e.toString().contains("user_already_exists")) {
+        errorMessage = loc.accountExists;
+      } else if (e.toString().contains("invalid_email")) {
+        errorMessage = loc.invalidEmail;
+      } else if (e.toString().contains("weak_password")) {
+        errorMessage = loc.weakPassword;
+      }
+
+      showPopup(errorMessage, isError: true);
     }
+
     if (!mounted) return;
     setState(() => isLoading = false);
   }
@@ -295,40 +277,7 @@ Future<void> signUpWithEmail() async {
                             ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-
-                  Row(
-                    children: [
-                      const Expanded(child: Divider(thickness: 1)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(loc.orSignUpWith),
-                      ),
-                      const Expanded(child: Divider(thickness: 1)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: OutlinedButton.icon(
-                      onPressed: isLoading ? null : signUpWithGoogle,
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.grey),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      icon: Image.network(
-                        "https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png",
-                        height: 24,
-                      ),
-                      label: Text(loc.signUpWithGoogle,
-                          style: GoogleFonts.poppins()),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40), // Increased space
 
                   Center(
                     child: Row(
